@@ -58,7 +58,7 @@ application = tornado.web.Application([
   (r"/js.js", JSHandler),
   (r"/css.css", CSSHandler),
   (r'/webfavicon.ico()', tornado.web.StaticFileHandler, {'path': frontendPath + '/favicon.ico'}),
-  (r"/ShareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/ShareTech.ttf'}),
+  (r"/ShareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/shareTech.ttf'}),
 ])
 
 http_server = tornado.httpserver.HTTPServer(application)
