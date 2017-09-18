@@ -1,14 +1,47 @@
+html *
+{
+   font-family: 'ShareTech', sans-serif;
+}
+
+
 table, td, th {    
-    border: 1px solid #ddd;
     text-align: center;
 }
 
 table {
     border-collapse: collapse;
-    width: 100%;
 }
 
 th, td {
     padding: 15px;
 }
 tr:nth-child(even){background-color: #f2f2f2}
+
+body {text-align:center;}
+table.center {
+  margin-left:auto; 
+  margin-right:auto;
+}
+.coin {
+    border: none;
+    color: white;
+    padding: 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 25px;
+    cursor: pointer;
+    width:43%;
+    border-radius:6px; 
+}
+
+.active .coin {
+    border: 5px solid blue;
+}
+#btc {
+background-color: #FF9900;
+}
+
+#bch {
+background-color: #68A137;
+}
