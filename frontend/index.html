@@ -7,8 +7,14 @@
 <title>Bitcoin Voice</title>
 </head>
 
-<body>
+<body onload="setupPage();">
+<table class="center" style="width:100%">
+  <tr>
+    <td id="btc" class="coin active" onclick="selectCoin('btc')">Bitcoin</td>
+    <td id="bch" class="coin" onclick="selectCoin('bch')">Bitcoin Cash</td> 
+  </tr>
+</table>
 
-<table id="labelTable"></table>
+<table class="center" id="labelTable" style="width: 60%"></table>
 
 </body>
