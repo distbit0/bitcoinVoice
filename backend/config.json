@@ -2,6 +2,8 @@
 "clientDefaults":
   {
   "rowsCount":20,
-  "coin":"bch"
+  "coin":"bch", 
+  "startDate": "1/1/2007",
+  "endDate": ""
   }
 }
