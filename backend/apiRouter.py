@@ -38,18 +38,18 @@ class homeHandler(tornado.web.RequestHandler):
       uiDefaults = getConfig["uiDefaults"]
       self.write(uiDefaults)
     
-    elif function == "getLableRange":
-      coin = self.get_argument("coin")
-      rangeStart = int(self.get_argument("start"))
-      rangeEnd = int(self.get_argument("end"))
-      labels = interface.getLabelRange(start, end, coin)
-      self.write(labels)
-    
     elif function == "searchLabels":
-      coin = self.get_argument("coin")
+      startPos = int(self.get_argument("startPos"))
+      endPos = int(self.get_argument("endPos"))
+      startDate = self.get_argument("startDate")
+      endDate = self.get_argument("endDate")
       searchTerm = self.get_argument("searchTerm")
-      labels = interface.searchLabels(searchTerm, coin)
+      coin = self.get_argument("coin")
+      labels = interface.searchLabels(posStart, posEnd, dateStart, dateEnd, searchTerm, coin)
       self.write(labels)
+      
+    elif "404":
+      self.write("404")
 
 
 application = tornado.web.Application([
@@ -65,4 +65,3 @@ application = tornado.web.Application([
 if __name__ == "__main__":
 	http_server.listen(80)
 	tornado.ioloop.IOLoop.instance().start()
-
