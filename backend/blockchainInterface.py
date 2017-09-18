@@ -1,8 +1,8 @@
-def getLabelRange(start, end, coin):
-  pass
+def searchLabels(startPos, endPos, startDate, endDate, searchTerm, coin):
+  if searchTerm:
+    pass
+  else:
+    pass
 
-
-def searchLabels(searchTerm, coin):
-  pass
+    
   
-
