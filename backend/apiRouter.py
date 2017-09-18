@@ -57,11 +57,11 @@ application = tornado.web.Application([
   (r"/", HTMLHandler),
   (r"/js.js", JSHandler),
   (r"/css.css", CSSHandler),
-  (r'/webfavicon.ico()', tornado.web.StaticFileHandler, {'path': BEE_PATH + '/favicon.ico'}),
-  (r"/ShareTech.ttf()", tornado.web.StaticFileHandler, {'path': BEE_PATH + '/ShareTech.ttf'}),
+  (r'/webfavicon.ico()', tornado.web.StaticFileHandler, {'path': frontendPath + '/favicon.ico'}),
+  (r"/ShareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/ShareTech.ttf'}),
 ])
 
-
+http_server = tornado.httpserver.HTTPServer(application)
 if __name__ == "__main__":
 	http_server.listen(80)
 	tornado.ioloop.IOLoop.instance().start()
