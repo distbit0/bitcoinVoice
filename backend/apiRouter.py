@@ -4,6 +4,7 @@ import blockchainInterface as interface
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
+import json
 frontendPath = sys.argv[1] + "/frontend"
 
 def getConfig():
@@ -32,11 +33,11 @@ class homeHandler(tornado.web.RequestHandler):
   # Route to the appropriate function, passing in parameters as required.
 
   def get(self):  
-    function = self.get_argument("function", default="404")
+    function = self.get_argument("function")
     
     if function == "getUiDefaults":
-      uiDefaults = getConfig["uiDefaults"]
-      self.write(uiDefaults)
+      uiDefaults = getConfig()["uiDefaults"]
+      self.write(json.dumps(uiDefaults))
     
     elif function == "searchLabels":
       startPos = int(self.get_argument("startPos"))
@@ -45,11 +46,8 @@ class homeHandler(tornado.web.RequestHandler):
       endDate = self.get_argument("endDate")
       searchTerm = self.get_argument("searchTerm")
       coin = self.get_argument("coin")
-      labels = interface.searchLabels(posStart, posEnd, dateStart, dateEnd, searchTerm, coin)
-      self.write(labels)
-      
-    elif "404":
-      self.write("404")
+      labels = interface.searchLabels(startPos, endPos, startDate, endDate, searchTerm, coin)
+      self.write(json.dumps(labels))
 
 
 application = tornado.web.Application([
@@ -58,7 +56,9 @@ application = tornado.web.Application([
   (r"/js.js", JSHandler),
   (r"/css.css", CSSHandler),
   (r'/webfavicon.ico()', tornado.web.StaticFileHandler, {'path': frontendPath + '/favicon.ico'}),
-  (r"/ShareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/shareTech.ttf'}),
+  (r'/magnifyingGlass.png()', tornado.web.StaticFileHandler, {'path': frontendPath + '/magnifyingGlass.png'}),
+  (r"/shareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/shareTech.ttf'}),
+  (r"/hairline.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/hairline.ttf'}),
 ])
 
 http_server = tornado.httpserver.HTTPServer(application)
