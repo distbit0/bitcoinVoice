@@ -51,7 +51,7 @@ th, td {
     width:85%;
     color: #514BCF;
     border-radius:100px;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 #searchBar{
@@ -131,7 +131,7 @@ table.center {
   
 thead {
   background-color: #868d8d;
-  font-size: 17px;
+  font-size: 18px;
   padding: 2px;
   color: white;
   }
