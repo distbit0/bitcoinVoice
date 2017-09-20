@@ -9,7 +9,7 @@
 
 <body onload="setupPage();">
 <h1 id="title">Bitcoin Voice</h1>
-<h2 id="tagline">
+<h2 id="tagline"></h2>
 <table class="center" style="width:100%">
   <tr>
     <td id="bch" class="coin" onclick="selectCoin('bch', event=true)">Bitcoin Cash</td> 
@@ -21,7 +21,7 @@
     <td><label class="inputLabel">Rows:&nbsp;</label><input onblur="populateLabels()" id="rowsCount" type="number"><input type="button" class="smallButton" style="float:left" value="Clear" onclick="setupPage()"></td>
   </tr>
   <tr>
-    <td><label class="inputLabel">Time Period:&nbsp;</label><input type="date" id="startDate" onblur="populateLabels()"> <label class="inputLabel">&nbsp;->&nbsp;</label> <input type="date" id="endDate" onblur="populateLabels()"></td>
+    <td><label class="inputLabel">Time Period:&nbsp;</label><select id="timePeriod" onblur="populateLabels()"></td>
   </tr>
 </table>
 <input type="text" id="searchBar" onenter="populateLabels()" onblur="populateLabels()">
