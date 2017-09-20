@@ -1,9 +1,14 @@
 {
-"clientDefaults":
-  {
-  "rowsCount":20,
-  "coin":"bch", 
-  "startDate": "1/1/2007",
-  "endDate": ""
-  }
+	"uiDefaults": {
+		"rowsCount": 20,
+		"coin": "bch",
+		"timePeriod": "day",
+		"timePeriods": {
+			"Day": 1,
+			"Week": 7,
+			"Month": 30,
+			"Year": 365,
+			"All time": 4000000
+		}
+	}
 }
