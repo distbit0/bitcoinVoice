@@ -29,7 +29,7 @@ table {
 #rowsCount {
 width: 70px;
 }
-#rowsCount, .inputLabel, #startDate, #endDate{
+#rowsCount, .inputLabel, #timePeriod{
   height: 36px;
   float: left;
   text-align: right;
@@ -124,7 +124,7 @@ table.center {
     color: white;
 }
 
-#rowsCount, #startDate, #endDate{
+#rowsCount, #startDate, #timePeriod{
   background-color: #EEE;
   border: 1px solid black;
 }
