@@ -42,7 +42,7 @@ function populateLabels(extend=false)
         var utxoHeader = headerRow.insertCell(2);
         rankHeader.innerHTML = "<b>Rank</b>";
         labelHeader.innerHTML = "<b>Public Label</b>";
-        utxoHeader.innerHTML = "<b>UTXO</b>";
+        utxoHeader.innerHTML = "<b>Total Unspent Output</b>";
         }
       var body = labelTableHTML.createTBody();
       for (var i = 0; i < labels.length; i++)
