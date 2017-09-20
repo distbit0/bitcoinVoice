@@ -13,8 +13,8 @@ function populateLabels(extend=false)
   var rowsCount = rowsCountHTML.value;
   var coin = returnActiveCoin();
   var searchTerm = document.getElementById("searchBar").value;
-  var startDate = document.getElementById("startDate").value;
-  var endDate = document.getElementById("endDate").value;
+  var startDate = document.getElementById("timePeriod").value;
+  var endDate = getCurrentDate();
   var labelTableHTML = document.getElementById("labelTable");
   var listLength = labelTableHTML.rows.length;
   if (extend == false)
@@ -110,44 +110,41 @@ function getUiDefaults()
   var uiDefaults = JSON.parse(APIResponseJSON);
   var coin = uiDefaults["coin"];
   var rowsCount = uiDefaults["rowsCount"];
-  var startDate = uiDefaults["startDate"];
-  var endDate = uiDefaults["endDate"];
+  var timePeriod = uiDefaults["timePeriod"];
+  var timePeriods = uiDefaults["timePeriods"];
   var rowsCountHTML = document.getElementById("rowsCount");
-  var startDateHTML = document.getElementById("startDate");
-  var endDateHTML = document.getElementById("endDate");
+  var timePeriodHTML = document.getElementById("timePeriod");
   selectCoin(coin);
-  console.log(rowsCount);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;
-  Date.prototype.toDateInputValue = (function() {
-  var local = new Date(this);
-  local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-  return local.toJSON().slice(0,10);});
-  console.log("Start date: " + startDate);
-  startDateHTML.value = startDate;
-  if (endDate == "")
+  var currentDate = getCurrentDate();
+  var timePeriodList = getSortedKeys(timePeriods);
+  for (var i = 0; i< timePeriodList.length; i++)
   {
-    endDateHTML.value = new Date().toDateInputValue();
+    periodName = timePeriodList[i];
+    startDate = new Date(currentDate);
+    startDate.setDate(startDate.getDate() - timePeriods[periodName]);  
+    var option = document.createElement("option");
+    option.innerHTML = periodName;
+    timePeriodHTML.add(option);
+    if (periodName == timePeriod)
+    {
+      timePeriodHTML.value = timePeriod;
+    }
+    option.value = startDate;
   }
-  else
-  {
-    endDateHTML.value = endDate;
-  }
-  endDateHTML.max = endDateHTML.value;
 }
 
 
 function clearScreen()
 {
   var rowsCountHTML = document.getElementById("rowsCount");
-  var startDateHTML = document.getElementById("startDate");
-  var endDateHTML = document.getElementById("endDate");
+  var timePeriodHTML = document.getElementById("timePeriod");
   var searchBarHTML = document.getElementById("searchBar");
   var labelTableHTML = document.getElementById("labelTable");
   
   rowsCountHTML.value = "";
-  startDateHTML.value = "";
-  endDateHTML.value = "";
+  timePeriodHTML.innerHTML = "";
   searchBarHTML.value = "";
   labelTableHTML.value = "";
   }
@@ -164,4 +161,20 @@ function returnActiveCoin()
   {
     return "btc";
   }
+}
+
+
+function getCurrentDate()
+{
+  Date.prototype.toDateInputValue = (function() {
+  var local = new Date(this);
+  local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+  return local.toJSON().slice(0,10);});
+  return new Date().toDateInputValue();
+}
+
+
+function getSortedKeys(obj) {
+    var keys = []; for(var key in obj) keys.push(key);
+    return keys.sort(function(a,b){return obj[b]-obj[a]}).reverse();
 }
