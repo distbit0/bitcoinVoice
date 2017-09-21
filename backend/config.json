@@ -3,6 +3,7 @@
 		"rowsCount": 20,
 		"coin": "bch",
 		"timePeriod": "day",
+		"orbitState":"night",
 		"timePeriods": {
 			"Day": 1,
 			"Week": 7,
