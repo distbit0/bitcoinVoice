@@ -34,6 +34,7 @@ function populateLabels(extend=false)
     {
       var APIResponseJSON = req.responseText;
       var labels = JSON.parse(APIResponseJSON);
+        
       if (extend == false){
         var header = labelTableHTML.createTHead();
         var headerRow = header.insertRow(0);
@@ -59,11 +60,50 @@ function populateLabels(extend=false)
       {
         window.scrollTo(0,document.body.scrollHeight);
       }
+      if ($("#body").hasClass("nightTimeBody"))
+      {
+        $("#labelTable tr:nth-child(even)").addClass("nightTimeRows");
+      }
     }
   };
   req.open("GET", "/api/?function=searchLabels&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm + "&coin=" + coin, true);
   req.send();
     
+}
+
+
+function sunChange(command="toggle"){
+  var bodyHTML = $("#body");
+  var secondLabelTableRowsHTML = $("#labelTable tr:nth-child(even)");
+  var sunChangeButtonHTML = document.getElementById("sunChange");
+  function toDay(){
+      bodyHTML.removeClass("nightTimeBody");
+      secondLabelTableRowsHTML.removeClass("nightTimeRows");
+      sunChangeButtonHTML.value = "Night Mode";
+  }
+      
+  function toNight(){
+      bodyHTML.addClass("nightTimeBody");
+      secondLabelTableRowsHTML.addClass("nightTimeRows");
+      sunChangeButtonHTML.value = "Day Mode";
+  }
+  if (command == "toggle")
+  {
+    if (bodyHTML.hasClass("nightTimeBody"))
+    {
+      toDay();
+    }
+    else
+    {
+      toNight();
+    }
+  }
+  else if (command == "night"){
+    toNight();
+  }
+  else if (command == "day"){
+    toDay();
+  }
 }
 
 
@@ -73,6 +113,7 @@ function setupPage()
   clearScreen();
   getUiDefaults();
   populateLabels();
+  mobileAdjust();
 }
 
 
@@ -112,9 +153,11 @@ function getUiDefaults()
   var rowsCount = uiDefaults["rowsCount"];
   var timePeriod = uiDefaults["timePeriod"];
   var timePeriods = uiDefaults["timePeriods"];
+  var orbitState = uiDefaults["orbitState"];
   var rowsCountHTML = document.getElementById("rowsCount");
   var timePeriodHTML = document.getElementById("timePeriod");
   selectCoin(coin);
+  sunChange(orbitState);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;
   var currentDate = getCurrentDate();
@@ -177,4 +220,51 @@ function getCurrentDate()
 function getSortedKeys(obj) {
     var keys = []; for(var key in obj) keys.push(key);
     return keys.sort(function(a,b){return obj[b]-obj[a]}).reverse();
+}
+
+
+function mobileAdjust(){
+  var userAgent = navigator.userAgent.toLowerCase();
+  var isMobile = {
+    Android: function() {
+        return userAgent.indexOf("android") != -1;
+    },
+    iOS: function() {
+        return (userAgent.indexOf("iphone") != -1 || navigator.userAgent.indexOf("ipod") != -1 || navigator.userAgent.indexOf("ipad") != -1);
+    },
+    Opera: function() {
+        return userAgent.indexOf("opera mini") != -1;
+    },
+    Windows: function() {
+        return userAgent.indexOf("emobile") != -1;
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+  };
+  if (isMobile.any() == true)
+  {
+    document.getElementById("mainPage").style.width = "100%";
+  }
+}
+
+
+
+function pageSwap(){
+  function isHidden(el) {
+      var style = window.getComputedStyle(el);
+      return (style.display === 'none')
+  }
+  var mainPageHTML = document.getElementById("mainPage");
+  var aboutPageHML = document.getElementById("aboutPage");
+  if (isHidden(mainPageHTML))
+  {
+    mainPageHTML.style.display = "";
+    aboutPageHML.style.display = "none";
+  }
+  else
+  {
+    mainPageHTML.style.display = "none";
+    aboutPageHML.style.display = "";
+  }
 }
