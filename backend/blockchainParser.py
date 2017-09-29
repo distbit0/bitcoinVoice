@@ -14,12 +14,12 @@ def extractOpReturnText(output):
     except: return ""
     
     
-def get
-    
-    
 def subtractFromDataBase(transaction):
-    for no, txInput in enumerate(transaction.inputs):
-        #If input in databse:
+    for txInput in transaction.inputs:
+        index = txInput.transaction_index
+        txid = txInput.transaction_hash
+        #db.removeAll("txid": txid, "index": index)
+        
             
     
 def addToDataBase(transaction):
