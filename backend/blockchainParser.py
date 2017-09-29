@@ -1,5 +1,5 @@
-import sys
-from blockchain_parser.blockchain import Blockchain
+def 
+
 
 def initDataBase():
     pass
@@ -18,8 +18,7 @@ def subtractFromDataBase(transaction):
     for txInput in transaction.inputs:
         index = txInput.transaction_index
         txid = txInput.transaction_hash
-        #db.removeAll("txid": txid, "index": index)
-        
+        #db.removeAll("txid": txid, "index": index)  
             
     
 def addToDataBase(transaction):
@@ -36,11 +35,14 @@ def addToDataBase(transaction):
         #db.addRow(txid, opReturn, opReturns[opReturn]["value"], opReturns[opReturn]["index"])
     
     
-# Instantiate the Blockchain by giving the path to the directory 
-# containing the .blk files created by bitcoind
-blockchain = Blockchain(sys.argv[1])
-with open("opReturns.txt", "a") as opReturnFile:
-    for block in blockchain.get_unordered_blocks():
-        for tx in block.transactions:
-            addToDataBase(tx)
-            subtractFromDatabse(tx)     
+def scan(): 
+    # Instantiate the Blockchain by giving the path to the directory 
+    # containing the .blk files created by bitcoind 
+    import sys
+    from blockchain_parser.blockchain import Blockchain
+    blockchain = Blockchain(sys.argv[1])
+    with open("opReturns.txt", "a") as opReturnFile:
+        for block in blockchain.get_unordered_blocks():
+            for tx in block.transactions:
+                addToDataBase(tx)
+                subtractFromDatabse(tx)     
