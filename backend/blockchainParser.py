@@ -1,10 +1,3 @@
-def 
-
-
-def initDataBase():
-    pass
-    
-    
 def extractOpReturnText(output):
     import re, binascii
     script = str(output.script)
@@ -18,21 +11,22 @@ def subtractFromDataBase(transaction):
     for txInput in transaction.inputs:
         index = txInput.transaction_index
         txid = txInput.transaction_hash
-        #db.removeAll("txid": txid, "index": index)  
+        db.remove("txid": txid, "index": index)
             
     
-def addToDataBase(transaction):
+def addToDataBase(transaction, time):
     opReturns = {}
     txid = transaction.hash
     for no, output in enumerate(transaction.outputs):
         if output.is_return():
             opReturn = extractOpReturnText(output)
-            if opReturn and len(transaction.outputs) > no + 1:
+            if opReturn and len(transaction.outputs) => no + 1:
                 valueBuddy = transaction.outputs[no+1]
-                value = valueBuddy.satoshis/100000000
-                opReturns[opReturn] =  opReturns[opReturn] = ["value": value, "index":no]
-    #for opReturn in opReturns:
-        #db.addRow(txid, opReturn, opReturns[opReturn]["value"], opReturns[opReturn]["index"])
+                value = valueBuddy.satoshis
+                opReturns.append({"opReturn": opReturn, "value": value, "index":no+1, "time": time, "txid": txid]
+   for opReturn in opReturns:
+        opReturn = opReturns[opReturn]
+        db.addRow(opReturn)
     
     
 def scan(): 
@@ -41,8 +35,8 @@ def scan():
     import sys
     from blockchain_parser.blockchain import Blockchain
     blockchain = Blockchain(sys.argv[1])
-    with open("opReturns.txt", "a") as opReturnFile:
-        for block in blockchain.get_unordered_blocks():
-            for tx in block.transactions:
-                addToDataBase(tx)
-                subtractFromDatabse(tx)     
+    for block in blockchain.get_unordered_blocks():
+        blockTime = block.header.timestamp
+        for tx in block.transactions:
+            addToDataBase(t, blockTime)
+            subtractFromDatabse(tx)     
