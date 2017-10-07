@@ -23,7 +23,7 @@ def addToDataBase(transaction, time):
             if opReturn and len(transaction.outputs) => no + 1:
                 valueBuddy = transaction.outputs[no+1]
                 value = valueBuddy.satoshis
-                opReturns.append({"opReturn": opReturn, "value": value, "index":no+1, "time": time, "txid": txid]
+                opReturns.append({"opReturn": opReturn, "value": value, "index":no+1, "time": time, "txid": txid})
    for opReturn in opReturns:
         opReturn = opReturns[opReturn]
         db.addRow(opReturn)
@@ -38,5 +38,5 @@ def scan():
     for block in blockchain.get_unordered_blocks():
         blockTime = block.header.timestamp
         for tx in block.transactions:
-            addToDataBase(t, blockTime)
+            addToDataBase(tx, blockTime)
             subtractFromDatabse(tx)     
