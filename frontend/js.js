@@ -9,6 +9,7 @@ function initCoinHive()
 
 function populateLabels(extend=false)
 {
+  var chainID = document.getElementById("chainID").value;
   var rowsCountHTML = document.getElementById("rowsCount");
   var rowsCount = rowsCountHTML.value;
   var coin = returnActiveCoin();
@@ -17,6 +18,7 @@ function populateLabels(extend=false)
   var endDate = getCurrentDate();
   var labelTableHTML = document.getElementById("labelTable");
   var listLength = labelTableHTML.rows.length;
+  
   if (extend == false)
   {
     listLength = labelTableHTML.innerHTML = "";
@@ -66,7 +68,7 @@ function populateLabels(extend=false)
       }
     }
   };
-  req.open("GET", "/api/?function=searchLabels&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm + "&coin=" + coin, true);
+  req.open("GET", "/api/?function=getPublicLabelAggregates&chainID=" + chainID + "&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm + "&coin=" + coin, true);
   req.send();
     
 }
@@ -121,16 +123,27 @@ function selectCoin(coin, event=false)
 {
   var bchHTML = document.getElementById("bch");
   var btcHTML = document.getElementById("btc");
-  if (coin == "bch")
+  if (coin == "bch_main")
   {
+    chainID.value = 2;
     if (!bchHTML.className.includes("active"))
     {
       bchHTML.className += " active";
     }
     btcHTML.className = btcHTML.className.replace(" active", "");
   }
-  else
+  else if (coin == "btc_main")
   {
+    chainID.value = 1;
+    if (!btcHTML.className.includes("active"))
+    {
+      btcHTML.className += " active";
+    }
+    bchHTML.className = bchHTML.className.replace(" active", "");
+  }
+  else if (coin == "btc_test")
+  {
+    chainID.value = 3;
     if (!btcHTML.className.includes("active"))
     {
       btcHTML.className += " active";
@@ -174,7 +187,7 @@ function getUiDefaults()
     {
       timePeriodHTML.value = timePeriod;
     }
-    option.value = startDate;
+    option.value = startDate.getTime()/1000;
   }
 }
 
@@ -212,8 +225,8 @@ function getCurrentDate()
   Date.prototype.toDateInputValue = (function() {
   var local = new Date(this);
   local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-  return local.toJSON().slice(0,10);});
-  return new Date().toDateInputValue();
+  return local.getTime()/1000;});
+  return new Date().toDateInputValue()
 }
 
 
