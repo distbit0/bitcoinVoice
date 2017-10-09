@@ -15,10 +15,12 @@
     <h1 id="title">Bitcoin Voice</h1>
     <h2 id="tagline"></h2>
     <input type="button" class="smallButton pageSwapButton" onclick="pageSwap()" value="About">
+    <input type="hidden" id="chainID" value="3" />
     <table class="center" style="width:100%">
       <tr>
         <td id="bch" class="coin" onclick="selectCoin('bch', event=true)">Bitcoin Cash</td> 
         <td id="btc" class="coin" onclick="selectCoin('btc', event=true)">Bitcoin</td>
+        <td id="btc_test" class="coin" onclick="selectCoin('btc_test', event=true)">Bitcoin Testnet</td>
       </tr>
     </table>
     <table class="center" style="width:100%">

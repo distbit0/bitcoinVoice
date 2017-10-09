@@ -93,7 +93,7 @@ table.center {
     font-family: 'hairline', sans-serif;
 }
 
-#bch.active, bch:hover {
+#bch.active, #bch:hover {
     background-color: #4BCF51;
     color: white;
 }
@@ -108,6 +108,25 @@ table.center {
 }
 
 #bch {
+    border: 2px solid #4BCF51;
+    color: #4BCF51;
+}
+
+#btc_test.active, #btc_test:hover {
+    background-color: #4BCF51;
+    color: white;
+}
+
+#bch_test.active, #bch_test:hover {
+    background-color: #FF9900;
+    color: white;
+}
+#btc_test {
+    border: 2px solid #FF9900;
+    color: #FF9900;
+}
+
+#bch_test {
     border: 2px solid #4BCF51;
     color: #4BCF51;
 }

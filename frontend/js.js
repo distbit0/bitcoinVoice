@@ -12,7 +12,7 @@ function populateLabels(extend=false)
   var chainID = document.getElementById("chainID").value;
   var rowsCountHTML = document.getElementById("rowsCount");
   var rowsCount = rowsCountHTML.value;
-  var coin = returnActiveCoin();
+  // var coin = returnActiveCoin(); REPLACED BY chainID
   var searchTerm = document.getElementById("searchBar").value;
   var startDate = document.getElementById("timePeriod").value;
   var endDate = getCurrentDate();
@@ -68,7 +68,7 @@ function populateLabels(extend=false)
       }
     }
   };
-  req.open("GET", "/api/?function=getPublicLabelAggregates&chainID=" + chainID + "&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm + "&coin=" + coin, true);
+  req.open("GET", "/api/?function=getPublicLabelAggregates&chainID=" + chainID + "&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm, true);
   req.send();
     
 }
@@ -121,35 +121,46 @@ function setupPage()
 
 function selectCoin(coin, event=false)
 {
-  var bchHTML = document.getElementById("bch");
-  var btcHTML = document.getElementById("btc");
-  if (coin == "bch_main")
+  var activateHTML = document.getElementById(coin);
+  
+  if (coin == "bch")
   {
     chainID.value = 2;
-    if (!bchHTML.className.includes("active"))
-    {
-      bchHTML.className += " active";
-    }
-    btcHTML.className = btcHTML.className.replace(" active", "");
+    var deactivate1HTML = document.getElementById("btc");
+    var deactivate2HTML = document.getElementById("btc_test");
+    var deactivate3HTML = document.getElementById("bch_test");
   }
-  else if (coin == "btc_main")
+  else if (coin == "btc")
   {
     chainID.value = 1;
-    if (!btcHTML.className.includes("active"))
-    {
-      btcHTML.className += " active";
-    }
-    bchHTML.className = bchHTML.className.replace(" active", "");
+    var deactivate1HTML = document.getElementById("bch");
+    var deactivate2HTML = document.getElementById("btc_test");
+    var deactivate3HTML = document.getElementById("bch_test");
   }
   else if (coin == "btc_test")
   {
     chainID.value = 3;
-    if (!btcHTML.className.includes("active"))
-    {
-      btcHTML.className += " active";
-    }
-    bchHTML.className = bchHTML.className.replace(" active", "");
+
+    var deactivate1HTML = document.getElementById("btc");
+    var deactivate2HTML = document.getElementById("bch");
+    var deactivate3HTML = document.getElementById("bch_test");
   }
+  
+  
+  // activate selected section
+  if (!activateHTML.className.includes("active"))
+  {
+    activateHTML.className += " active";
+  }
+  
+  try {
+  // deactive other sections
+  deactivate1HTML.className = deactivate1HTML.className.replace(" active", "");
+  deactivate2HTML.className = deactivate2HTML.className.replace(" active", "");
+  deactivate3HTML.className = deactivate3HTML.className.replace(" active", "");
+    } catch (e) {}
+    
+  
   if (event){
   populateLabels();}
 }
@@ -205,7 +216,7 @@ function clearScreen()
   labelTableHTML.value = "";
   }
   
-
+/* replaced by chainID
 function returnActiveCoin()
 {
   var bchHTML = document.getElementById("bch");
@@ -218,7 +229,7 @@ function returnActiveCoin()
     return "btc";
   }
 }
-
+*/
 
 function getCurrentDate()
 {
