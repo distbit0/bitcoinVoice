@@ -1,18 +1,19 @@
-# unspentDB
-# Database functions for publicLabelOutput actions.
+#############################################################################################
+#
+# Bitcoin Voice - Database interface   
+#
+############################################################################################## 
 
 '''
 createPLrecord - all columns.
-deletePLrecord - txID and sequence#
-searchPLrecords - publicLabel, start date, end date.
+deletePLrecord - chainID, txID and sequence#
+searchPLrecords - chainID, publicLabel, start date, end date.
 '''
-
-
 import psycopg2
 import sys
+import uuid
 
 # connect to the postgres DB 
-
 try:
     conn = psycopg2.connect("dbname='bitcoinVoice'  user='postgres' password='99' host='localhost' ")
     print("Connected to bitcoinVoice DB...")
@@ -20,17 +21,49 @@ except:
     print ("I am unable to connect to the database")
     print (sys.exc_info()[0])
     print (sys.exc_info())
-    
 
-def deleteAllPublicLabels(chainID):
-    print("Hey! We are deleting the databse!")
+#################################################################    
+def updateLatestCheckedBlockHeight(chainID, latest_block):
+    # update the latestCheckedBlockHeight field to indicate the block has been checked for public label outputs
+    
+    #print('Updating latestCheckedBlockHeight to %s for chainID %s'%(latest_block, str(chainID),))    
     cursor = conn.cursor()
-    cursor.execute('DELETE from "publicLabelOutput" where "chainID" = %s', (chainID,))
+    cursor.execute('UPDATE "blockchain" SET "latestCheckedBlockHeight" = %s WHERE "chainID" = %s', (latest_block, chainID,))
     conn.commit()
 
+#################################################################    
+def getLatestCheckedBlockHeight(chainID) :
+    # return the maximum height of all the public labels
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT max("latestCheckedBlockHeight") from "blockchain" where "chainID" = %s', (chainID,))
+    
+    # get the result set
+    desc = cursor.description
+    columnNames = [col[0] for col in desc]
+    publicLabels = [dict(zip(columnNames, row))  
+        for row in cursor.fetchall()]
+    
+
+    maxHeight = publicLabels[0]["max"]
+    
+    #print("maxHeight = " + str(maxHeight))
+    if maxHeight : return maxHeight
+    else : return 0
+
+#################################################################    
+def deleteAllPublicLabels(chainID):
+    print('Hey! We are deleting the publicLabelOutputs for chainID %s'%(str(chainID),))
+    cursor = conn.cursor()
+    cursor.execute('DELETE from "publicLabelOutput" where "chainID" = %s'%(str(chainID),))
+    conn.commit()
+
+#################################################################
+# NOT USED DEPRECATED FOR getLatestCheckedBlockHeight()
 def getUnspentPublicLabelMaxHeight(chainID) :
     # return the maximum height of all the public labels
     cursor = conn.cursor()
+    print('SELECT max("plBlockHeightCreated") from "publicLabelOutput" where "chainID" = %s'%(chainID,))
     cursor.execute('SELECT max("plBlockHeightCreated") from "publicLabelOutput" where "chainID" = %s', (chainID,))
     
     # get the result set
@@ -39,13 +72,14 @@ def getUnspentPublicLabelMaxHeight(chainID) :
     publicLabels = [dict(zip(columnNames, row))  
         for row in cursor.fetchall()]
     
+
     maxHeight = publicLabels[0]["max"]
     
     #print("maxHeight = " + str(maxHeight))
     if maxHeight : return maxHeight
     else : return 0
     
-    
+#################################################################    
 def getUnspentPublicLabels(chainID) :
     # return a list of transactions
     cursor = conn.cursor()
@@ -68,13 +102,14 @@ def setSpentTime(chainID, TxID, TxOutputSequence, Time):
 
     cursor = conn.cursor()
 
-    cursor.execute('UPDATE unixTimeSpent = %s from "publicLabelOutput" where "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (TxID, TxOutputSequence, Time,))
+    cursor.execute('UPDATE "publicLabelOutput" SET "unixTimeSpent" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (TxID, TxOutputSequence, Time,))
     
     conn.commit()
 
-
+#################################################################
 def getBlockchainList():
     # return a list of the online blockchains config data
+    
     cursor = conn.cursor()
    
     cursor.execute('SELECT "chainID", "chainName", "rpcport", "pathToBlockchain", "unitsCode" from "blockchain" where "online"=TRUE')
@@ -89,19 +124,23 @@ def getBlockchainList():
     return blockchainList
     
     
-    
+#################################################################    
 def deletePLrecord(chainID, TxID, TxOutputSequence):
-    # Deletes an publicLabelOutput record from the database - given a TxID and sequence#    
+    # Logically 'deletes' an publicLabelOutput record from the database - given a TxID and sequence#    
     # NOTE - Currently silent if no record is found to delete.
 
     cursor = conn.cursor()
 
+    '''
+    FIX THIS TO FIND THE RECORD THEN WRITE THE spent TIME TO THE RECORD. i.e. DON'T delete it from the DB.
+    
+    '''
     cursor.execute('DELETE from "publicLabelOutput" where "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (chainID, TxID, TxOutputSequence,))
 
     conn.commit()
 
 
-
+#################################################################
 def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
     # returns a dictionary of unspent public label outputs given public label and a date range filters
     # Date range is in unixtime - seconds since midnight 1 Jan 1970. Calling routine to specify the INT date range.
@@ -109,6 +148,7 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
     cursor = conn.cursor()
     print(startDate)
     print(endDate)
+    
     if publicLabel :
         cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "publicLabel" like %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
     else: 
@@ -122,31 +162,72 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
         
     return publicLabels
 
+#################################################################
+def insertOrUpdateBlockInfoRecord(chainID, blockhash, unixTimeLastScan, countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid) :
+    # Inserts or updates the blockInfo data using the results from a scan
+    
+    cursor = conn.cursor()
+    cursor.execute('UPDATE "blockInfo" SET "lastErrorTxID" = %s, "unixTimeLastScan" = %s, "countOutputsWithPublicLabels" = %s, "countOutputsWithSpentPublicLabels" = %s, "countOutputsWithErrors" = %s WHERE "chainID" = %s and "blockhash" = %s',
+         (txid, unixTimeLastScan, countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, chainID, blockhash))
+    
+    
+    # try the update first
+    conn.commit()   
+   
+    # if the update didn't work then try insert 
+    if cursor.rowcount == 0 :
+        
+        # Create a dictionary from the input params
+        rec = {} # Placeholder dictionary
+        
+        # Assign the values to the dictionary
+        rec["blockInfoID"]                          = str(uuid.uuid4())
+        rec["lastErrorTxID"]                        = txid
+        rec["blockhash"]                            = blockhash
+        rec["unixTimeLastScan"]                     = unixTimeLastScan    
+        rec["countOutputsWithPublicLabels"]         = countOutputsWithPublicLabels
+        rec["countOutputsWithSpentPublicLabels"]    = countOutputsWithSpentPublicLabels
+        rec["countOutputsWithErrors"]               = countOutputsWithErrors
+        rec["chainID"]                              = chainID
+        
 
-
+        # create a new DB record from the dictionary.
+        insertDict(cursor, "blockInfo", rec)
+ 
+#################################################################
 def createPLrecord(chainID, TxID, TxOutputSequence, publicLabel, amount, unixTime, blockHeight):
     # Creates a new database record publicLabelOutput
     # NOTE - performs no uniqueness checking - assumes the DB will handle that.
 
     cursor = conn.cursor()
     
-    # Create a dictionary from the input params
-    PLTxDict = {} # Placeholder dictionary
+    cursor.execute('UPDATE "publicLabelOutput" SET "publicLabel" = %s, "plBlockHeightCreated" = %s, "amountInSatoshis" = %s, "unixTimeCreated" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s',
+         (publicLabel, blockHeight, amount, unixTime, chainID, TxID, TxOutputSequence))
     
-    # Assign the values to the dictionary
-    PLTxDict["txID"]             = TxID    
-    PLTxDict["txOutputSequence"] = TxOutputSequence    
-    PLTxDict["publicLabel"]      = publicLabel    
-    PLTxDict["amountInSatoshis"] = amount    
-    PLTxDict["unixTimeCreated"]  = unixTime
-    PLTxDict["plBlockHeightCreated"] = blockHeight
-    PLTxDict["chainID"] = chainID
     
+    # try the update first
+    conn.commit()   
+   
+   # if the update returns 0 then it probably doesn't exist so insert
+    if cursor.rowcount == 0 :
+    
+        # Create a dictionary from the input params
+        rec = {} # Placeholder dictionary
+        
+        # Assign the values to the dictionary
+        rec["txID"]                 = TxID    
+        rec["txOutputSequence"]     = TxOutputSequence    
+        rec["publicLabel"]          = publicLabel    
+        rec["amountInSatoshis"]     = amount    
+        rec["unixTimeCreated"]      = unixTime
+        rec["plBlockHeightCreated"] = blockHeight
+        rec["chainID"]              = chainID
+        
 
-    # create a new DB record from the dictionary.
-    return insertDict(cursor, "publicLabelOutput", PLTxDict)
+        # create a new DB record from the dictionary.
+        result = insertDict(cursor, "publicLabelOutput", rec)
 
-
+#################################################################
 def insertDict(curs, tableName, data):
     # Inserts a new record into tableName given a dictionary
                                                 
@@ -159,9 +240,60 @@ def insertDict(curs, tableName, data):
     query = 'insert into "' + tableName + '"(%s) values (%s)' % (fieldList, placeholderList)
 
     fullQuery = curs.mogrify(query, list(values))
-    print(fullQuery)
+    #print(fullQuery)
     curs.execute(fullQuery)
     conn.commit()    
+    
+    return curs.rowcount
+
+#################################################################
+def spendPLrecord(chainID, TxID, outputSequence, unixtimeSpent):
+    # Sets the unixTimeSpend value for the specified PL record
+    
+
+    cursor = conn.cursor()
+    
+    cursor.execute('UPDATE "publicLabelOutput" SET "unixTimeSpent" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (float(unixtimeSpent), chainID, TxID, outputSequence,))
+    '''
+    cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "publicLabel" like %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
+    '''
+    
+    # get the result set
+    desc = cursor.description
+    columnNames = [col[0] for col in desc]
+    publicLabels = [dict(zip(columnNames, row))  
+        for row in cursor.fetchall()]
+        
+    return publicLabels
+
+
+
+'''
+def spendPLrecord(chainID, TxID, outputSequence):
+    """ update PL record's unixtimeSpent  """
+    sql = """ UPDATE publicLabelOutput
+                SET unixTimeSpent = %s
+                WHERE chainID = %s AND txID = %s and txOutputSequence = %s"""
+    conn = None
+    updated_rows = 0
+    try:
+        
+
+        # execute the UPDATE  statement
+        cur.execute(sql, (spentTimeValue, chainID, TxID, outputSequence))  #MIGHT NEED TO float() some of these parameters
+        # get the number of updated rows
+        updated_rows = cur.rowcount
+        # Commit the changes to the database
+        conn.commit()
+        # Close communication with the PostgreSQL database
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+'''
+
 
 
 
@@ -205,5 +337,6 @@ print (pubLabList)
 if pubLabList:
     print ('\n\nPublic Label List: ', pubLabList[0]['TxID'])
 '''
+
 
 

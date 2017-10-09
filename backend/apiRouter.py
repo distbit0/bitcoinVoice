@@ -1,3 +1,9 @@
+#############################################################################################
+#
+# Bitcoin Voice - Web API    
+#
+############################################################################################## 
+
 import sys
 import os
 import blockchainInterface as interface
@@ -10,7 +16,7 @@ path = sys.argv[1]
 
 def getConfig():
   import json
-  return json.loads(open("config.json").read())
+  return json.loads(open(path + "/backend/config.json").read())
   
   
 class HTMLHandler(tornado.web.RequestHandler):
@@ -44,14 +50,15 @@ class homeHandler(tornado.web.RequestHandler):
       uiDefaults = getConfig()["uiDefaults"]
       self.write(json.dumps(uiDefaults))
     
-    elif function == "searchLabels":
+    elif function == "getPublicLabelAggregates":
+      chainID = int(self.get_argument("chainID"))
       startPos = int(self.get_argument("startPos"))
       endPos = int(self.get_argument("endPos"))
-      startDate = self.get_argument("startDate")
-      endDate = self.get_argument("endDate")
-      searchTerm = self.get_argument("searchTerm")
-      coin = self.get_argument("coin")
-      labels = interface.searchLabels(startPos, endPos, startDate, endDate, searchTerm, coin)
+      startDate = self.get_argument("startDate", default=0)
+      endDate = self.get_argument("endDate", default=100000000000)
+      searchTerm = self.get_argument("searchTerm", default="")
+
+      labels = interface.getPublicLabelAggregates(chainID, startPos, endPos, startDate, endDate, searchTerm)
       self.write(json.dumps(labels))
 
 redirectApplication = tornado.web.Application([
