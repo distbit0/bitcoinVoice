@@ -1,4 +1,6 @@
 # Bitcoin Voice
+The intended use of this facility to is promote and allow for a more democratic and censorship resistant process of decision making to occur within the Bitcoin community.
+
 Bitcoin users can create transactions that include custom data in their outputs. A special kind known as "Public labels" are pairs of such outputs, the first of which contains the data, the second of which relates to the spendable amount. In this way a public label is associated with a spendable output. These kinds of public labels can be created using the latest version of Bitcoin Cash Unlimited which contains a "Public label" field on the Send tab.
 https://www.bitcoinunlimited.info/download
 
