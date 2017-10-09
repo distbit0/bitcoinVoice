@@ -4,11 +4,6 @@
 #
 ############################################################################################## 
 
-'''
-createPLrecord - all columns.
-deletePLrecord - chainID, txID and sequence#
-searchPLrecords - chainID, publicLabel, start date, end date.
-'''
 import psycopg2
 import sys
 import uuid
@@ -142,7 +137,7 @@ def deletePLrecord(chainID, TxID, TxOutputSequence):
 
 #################################################################
 def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
-    # returns a dictionary of unspent public label outputs given public label and a date range filters
+    # returns a dictionary of UNSPENT public label outputs given public label and a date range filters
     # Date range is in unixtime - seconds since midnight 1 Jan 1970. Calling routine to specify the INT date range.
 
     cursor = conn.cursor()
@@ -150,7 +145,9 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
     print(endDate)
     
     if publicLabel :
-        cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "publicLabel" like %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
+        # insert wild cards 
+        publicLabel = "%" + publicLabel + "%"
+        cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "publicLabel" ilike %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
     else: 
         cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, float(startDate), float(endDate),))
 

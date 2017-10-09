@@ -28,7 +28,7 @@ def extractOpReturnText(script):
         opReturn = opReturn.replace("\0", "");
         return opReturn
     except:   
-        print("extractOpReturnText error: " + sys.exc_info())
+        print("extractOpReturnText error: " + str(sys.exc_info()))
         return ""
     
     
@@ -53,10 +53,11 @@ def initRPCConnection(rpcport, rpcconnect, rpcuser, rpcpassword):
     except : 
         print("ERROR: Connection failed.")
         print(sys.exc_info())
-        return 
+        rpc_connection = None
     
     print("######################################################################################")
-    print("")    
+    print("")
+
     return rpc_connection
 
 
@@ -66,7 +67,7 @@ def updateSpentPLRows(chainID):
     # Bitcoin Voice - Top Public Labels set spent bitcoinVoicePLRecords  
     #
     #############################################################################################
-    print("Updating spent public labels ...")
+    print("### Updating spent public labels ...")
   
     # loop every bitcoinVoicePLRecord row and remove spent votes
     unspentPublicLabels = []
@@ -90,21 +91,22 @@ def addUnspentPLRows(chainID):
     # Bitcoin Voice - Top Public Labels create unspent bitcoinVoicePLRecords
     #
     #############################################################################################
-    print("Adding unspent public labels ...")
+    print("### Adding unspent public labels ...")
         
     # get last block via best block
     best_block_hash = rpc_connection.getbestblockhash()
     best_block = rpc_connection.getblock(best_block_hash)
     last_block = best_block["height"] - 6
     # last_block = 1201012 # this block is one in testnet that we know has a public label
-    
+
     
     # define first block height from maximum height already stored
     first_block = getLatestCheckedBlockHeight(chainID) + 1;
     #first_block = 1201011  # first sample tx with pair
     #first_block = 0        # uncomment to start again from empty table
     
- 
+    print("Verifying range from block " + str(first_block) + " to " + str(last_block))
+
     # reset table
     if first_block < 1060000: 
         deleteAllPublicLabels(chainID)

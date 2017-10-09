@@ -12,11 +12,13 @@ import tornado.web
 import tornado.httpserver
 import json
 frontendPath = sys.argv[1] + "/frontend"
+backendPath = sys.argv[1] + "/backend"
+
 path = sys.argv[1]
 
 def getConfig():
   import json
-  return json.loads(open(path + "/backend/config.json").read())
+  return json.loads(open(backendPath + "/config.json").read())
   
   
 class HTMLHandler(tornado.web.RequestHandler):
@@ -74,13 +76,13 @@ application = tornado.web.Application([
   (r"/shareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/shareTech.ttf'}),
   (r"/hairline.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/hairline.ttf'}),
 ], ssl_options={
-    "certfile": os.path.join(path + "/backend/ssl/certificate.crt"),
-    "keyfile": os.path.join(path + "/backend/ssl/private.key"),
+    "certfile": os.path.join("ssl/certificate.crt"),
+    "keyfile": os.path.join("ssl/private.key"),
 })
 
 http_server = tornado.httpserver.HTTPServer(application, ssl_options={
-    "certfile": os.path.join(path + "/backend/ssl/certificate.crt"),
-    "keyfile": os.path.join(path + "/backend/ssl/private.key"),
+    "certfile": os.path.join("ssl/certificate.crt"),
+    "keyfile": os.path.join("ssl/private.key"),
 })
 
 

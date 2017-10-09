@@ -31,7 +31,7 @@ def getPublicLabelAggregates(chainID, startPos, endPos, startDate, endDate, sear
 
     
 # returns a list of non-aggregated public labels that are unspent so aggregate layer can use drill down
-def getPublicLabels(chainID):
+def getPublicLabels(chainID, startPos, endPos, startDate, endDate, searchTerm):
     publicLabels = {}
     output = []
     # get a list of filtered unspent public labels

@@ -31,7 +31,7 @@
         <td><label class="inputLabel">Time Period:&nbsp;</label><select id="timePeriod" onblur="populateLabels()"></td>
       </tr>
     </table>
-    <input type="text" id="searchBar" onenter="populateLabels()" style="width: 90%; margin-right: auto; margin-left: auto;" onblur="populateLabels()">
+    <input type="text" id="searchBar" onkeydown="if(event.keyCode == 13) {populateLabels();}" style="width: 90%; margin-right: auto; margin-left: auto;" onblur="populateLabels()">
     <br><br><br>
     <table class="center" id="labelTable" style="width:100%"></table><br>
     <button onclick="populateLabels(extend=true)" class="smallButton">Show more results</button>
