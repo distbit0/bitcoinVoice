@@ -143,14 +143,16 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
 
     cursor = conn.cursor()
     
-    print(datetime.datetime.fromtimestamp(float(startDate)).strftime('%Y-%m-%d %H:%M:%S'))
-    print(datetime.datetime.fromtimestamp(float(endDate)).strftime('%Y-%m-%d %H:%M:%S'))
+    #print(datetime.datetime.fromtimestamp(float(startDate)).strftime('%Y-%m-%d %H:%M:%S'))
+    #print(datetime.datetime.fromtimestamp(float(endDate)).strftime('%Y-%m-%d %H:%M:%S'))
     
     if publicLabel :
         # insert wild cards 
         publicLabel = "%" + publicLabel + "%"
         cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "publicLabel" ilike %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
-    else: 
+        
+        
+    else: # there is no filter on the public label
         cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, float(startDate), float(endDate),))
 
     # get the result set

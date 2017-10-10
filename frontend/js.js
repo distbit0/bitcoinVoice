@@ -197,6 +197,7 @@ function getUiDefaults()
     startDate.setDate(startDate.getDate() - timePeriods[periodName]);  
     var option = document.createElement("option");
     option.innerHTML = periodName;
+    if (periodName = "All time") { option.selected = true};
     timePeriodHTML.add(option);
     if (periodName == timePeriod)
     {
