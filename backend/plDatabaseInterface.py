@@ -7,6 +7,7 @@
 import psycopg2
 import sys
 import uuid
+import datetime
 
 # connect to the postgres DB 
 try:
@@ -141,8 +142,9 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
     # Date range is in unixtime - seconds since midnight 1 Jan 1970. Calling routine to specify the INT date range.
 
     cursor = conn.cursor()
-    print(startDate)
-    print(endDate)
+    
+    print(datetime.datetime.fromtimestamp(float(startDate)).strftime('%Y-%m-%d %H:%M:%S'))
+    print(datetime.datetime.fromtimestamp(float(endDate)).strftime('%Y-%m-%d %H:%M:%S'))
     
     if publicLabel :
         # insert wild cards 

@@ -15,6 +15,7 @@ function populateLabels(extend=false)
   // var coin = returnActiveCoin(); REPLACED BY chainID
   var searchTerm = document.getElementById("searchBar").value;
   var startDate = document.getElementById("timePeriod").value;
+  //   var startDate = endDate - document.getElementById("timePeriod").value; // use python date subtraction instead
   var endDate = getCurrentDate();
   var labelTableHTML = document.getElementById("labelTable");
   var listLength = labelTableHTML.rows.length;
@@ -184,7 +185,10 @@ function getUiDefaults()
   sunChange(orbitState);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;
-  var currentDate = getCurrentDate();
+  
+  // build the datetime filter list
+  var d = new Date();
+  var currentDate = d.getTime();
   var timePeriodList = getSortedKeys(timePeriods);
   for (var i = 0; i< timePeriodList.length; i++)
   {

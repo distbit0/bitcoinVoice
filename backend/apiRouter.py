@@ -87,6 +87,7 @@ http_server = tornado.httpserver.HTTPServer(application, ssl_options={
 
 
 if __name__ == "__main__":
-  redirectApplication.listen(80)
+  # previously was listen(80) but received address already in use error
+  redirectApplication.listen(8080)
   http_server.listen(443)
   tornado.ioloop.IOLoop.instance().start()
