@@ -26,13 +26,30 @@ def updateLatestCheckedBlockHeight(chainID, latest_block):
     cursor = conn.cursor()
     cursor.execute('UPDATE "blockchain" SET "latestCheckedBlockHeight" = %s WHERE "chainID" = %s', (latest_block, chainID,))
     conn.commit()
+
+    
+#################################################################    
+def deleteRecentData(chainID, recentBestBlock) :
+    # delete recent data from blockInfo and publicLabelsOutput
+    print('Deleting data processed after block height %s'%(recentBestBlock))
+    # delete recent data because it could have been scanned from an orphaned branch
+    cursor = conn.cursor()
+    # delete ALL blockInfo rows for recent blocks on this chain
+    cursor.execute('DELETE from "blockInfo" where "chainID" = %s and "blockHeight" >= %s', (chainID, recentBestBlock, )) 
+    # delete ALL publicLabelOutputs for recent blocks on this chain
+    cursor.execute('DELETE from "publicLabelOutput" where "chainID" = %s and "plBlockHeightCreated" >= %s', (chainID, recentBestBlock ,))        
+    conn.commit()
+
     
 #################################################################    
 def blockInfoCheckZeroErrors(chainID, blockhash) :
-    # return the maximum height of all the public labels
+    # delete any data about recent blocks
+    # return the number of blockInfo rows with zero errors
+    
     cursor = conn.cursor()
-
-    cursor.execute('SELECT "blockInfoID" from "blockInfo" where "chainID" = %s and "blockhash" = %s', (chainID, blockhash))
+        
+    # return the number of blockInfo rows with zero errors
+    cursor.execute('SELECT "blockInfoID" from "blockInfo" where "chainID" = %s and "blockhash" = %s and "countOutputsWithErrors" = 0', (chainID, blockhash))
     
     return cursor.rowcount
 
@@ -56,12 +73,14 @@ def getLatestCheckedBlockHeight(chainID) :
     if maxHeight : return maxHeight
     else : return 0
 
+
 #################################################################    
 def deleteAllPublicLabels(chainID):
     print('Hey! We are deleting the publicLabelOutputs for chainID %s'%(str(chainID),))
     cursor = conn.cursor()
     cursor.execute('DELETE from "publicLabelOutput" where "chainID" = %s'%(str(chainID),))
     conn.commit()
+
 
 #################################################################
 # NOT USED DEPRECATED FOR getLatestCheckedBlockHeight()
@@ -107,7 +126,7 @@ def setSpentTime(chainID, TxID, TxOutputSequence, Time):
 
     cursor = conn.cursor()
 
-    cursor.execute('UPDATE "publicLabelOutput" SET "unixTimeSpent" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (TxID, TxOutputSequence, Time,))
+    cursor.execute('UPDATE "publicLabelOutput" SET "unixTimeSpent" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (Time, chainID, TxID, TxOutputSequence,))
     
     conn.commit()
 
@@ -173,12 +192,12 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
     return publicLabels
 
 #################################################################
-def insertOrUpdateBlockInfoRecord(chainID, blockhash, unixTimeLastScan, countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid) :
+def insertOrUpdateBlockInfoRecord(chainID, blockhash, unixTimeLastScan, countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid, blockHeight) :
     # Inserts or updates the blockInfo data using the results from a scan
     
     cursor = conn.cursor()
-    cursor.execute('UPDATE "blockInfo" SET "lastErrorTxID" = %s, "unixTimeLastScan" = %s, "countOutputsWithPublicLabels" = %s, "countOutputsWithSpentPublicLabels" = %s, "countOutputsWithErrors" = %s WHERE "chainID" = %s and "blockhash" = %s',
-         (txid, unixTimeLastScan, countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, chainID, blockhash))
+    cursor.execute('UPDATE "blockInfo" SET "lastErrorTxID" = %s, "unixTimeLastScan" = %s, "countOutputsWithPublicLabels" = %s, "countOutputsWithSpentPublicLabels" = %s, "countOutputsWithErrors" = %s, "blockHeight" = %s WHERE "chainID" = %s and "blockhash" = %s',
+         (txid, unixTimeLastScan, countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, blockHeight, chainID, blockhash))
     
     
     # try the update first
@@ -194,6 +213,7 @@ def insertOrUpdateBlockInfoRecord(chainID, blockhash, unixTimeLastScan, countOut
         rec["blockInfoID"]                          = str(uuid.uuid4())
         rec["lastErrorTxID"]                        = txid
         rec["blockhash"]                            = blockhash
+        rec["blockHeight"]                          = blockHeight
         rec["unixTimeLastScan"]                     = unixTimeLastScan    
         rec["countOutputsWithPublicLabels"]         = countOutputsWithPublicLabels
         rec["countOutputsWithSpentPublicLabels"]    = countOutputsWithSpentPublicLabels

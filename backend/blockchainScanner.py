@@ -11,7 +11,7 @@
 #
 #############################################################################################
 from plDatabaseInterface import *
-import datetime, sys
+import datetime, sys, time
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 import logging
 
@@ -79,17 +79,19 @@ def updateSpentPLRows(chainID):
     unspentPublicLabels = []
     unspentPublicLabels = getUnspentPublicLabels(chainID)
     for tx in unspentPublicLabels :
+        #print(tx)
         
         # test if the output is spent
-        isUnspentOut = rpc_connection.gettxout(tx["txID"], tx["txOutputSequence"])
+        isUnspentOut = rpc_connection.gettxout(tx["txID"], tx["txOutputSequence"]) # txindex=1 will return unspent!?!?!?!
 
         # the output has just been spent                 
-        if isUnspentOut == "":
+        if not isUnspentOut :
             print("########## Updating spent public label ..." + str(tx["txID"]) + " " + str(tx["txOutputSequence"]))
-            block = rpc_connection.getblock(isUnspentOut["bestblock"])
-            setSpentTime(tx["txID"], tx["txOutputSequence"], block["time"]) 
+            #block = rpc_connection.getblock(isUnspentOut["bestblock"]) # bestblock here is just the block of the tx
+            setSpentTime(chainID, tx["txID"], tx["txOutputSequence"], time.time()) 
+        #else :
+        #    print("UnSpent.")
                    
-
 
 def addUnspentPLRows(chainID):
     #############################################################################################
@@ -102,7 +104,7 @@ def addUnspentPLRows(chainID):
     # get last block via best block
     best_block_hash = rpc_connection.getbestblockhash()
     best_block = rpc_connection.getblock(best_block_hash)
-    last_block = best_block["height"] - 6
+    last_block = best_block["height"]
     # last_block = 1201012 # this block is one in testnet that we know has a public label
 
     
@@ -110,6 +112,9 @@ def addUnspentPLRows(chainID):
     first_block = getLatestCheckedBlockHeight(chainID) + 1;
     #first_block = 1201011  # first sample tx with pair
     #first_block = 0        # uncomment to start again from empty table
+
+    # rescan the most recent blocks    
+    if last_block - first_block <= rescanRecentBlocks : first_block = last_block - rescanRecentBlocks
     
     print("Verifying range from block " + str(first_block) + " to " + str(last_block))
 
@@ -123,9 +128,11 @@ def addUnspentPLRows(chainID):
         print("Perhaps the blockchain needs more synching to get up to date.")
         return 
         
-        
+    # delete recent data 
+    deleteRecentData(chainID, best_block["height"] - rescanRecentBlocks) 
+            
     print("Scanning from block " + str(first_block) + " to " + str(last_block))
-
+    
     # batch support : print timestamps of blocks 0 to 99 in 2 RPC round-trips:
     commands = [[ "getblockhash", height] for height in range(first_block, last_block)]
     block_hashes = rpc_connection.batch_(commands)
@@ -137,14 +144,16 @@ def addUnspentPLRows(chainID):
         
         # test if block exists in the blockInfo DB table 
         # if it exists and countOutputsWithErrors = 0 then skip the blockscan  
-        if blockInfoCheckZeroErrors(chaindID, h) > 0 : continue
+        #if blockInfoCheckZeroErrors(chainID, h) > 0 : continue
         
         # block stats
         countOutputsWithPublicLabels = 0
         countOutputsWithSpentPublicLabels = 0
         countOutputsWithErrors = 0
-            
+        
+        # load block    
         block = rpc_connection.getblock(h)
+        
         # for each transaction in a block scan the outputs with public labels 
         for txid in block["tx"]:
             
@@ -176,18 +185,20 @@ def addUnspentPLRows(chainID):
                     if n + 1 <= len(tx["vout"]) and opReturn:      
                         countOutputsWithPublicLabels += 1              
                         
+                        # Add public label whether spent or unspent
+                        valueBuddyOutput = tx["vout"][n + 1]
+                        value = valueBuddyOutput["value"] *100000000
+                            
+                        print("########## Adding unspent public label: " + datetime.datetime.fromtimestamp(block["time"]).strftime('%Y-%m-%d %H:%M:%S') + "Public Label: " + str(opReturn.rstrip()) + " Value: " + str(value) + " Height: " + str(block["height"]))
+
+                        createPLrecord(chainID, tx["txid"], n + 1, opReturn, value, block["time"], block["height"])
+                        
                         # test if the output is spent
                         isUnspentOut = rpc_connection.gettxout(txid, n + 1)
 
-                        # if the output is unspent then add to the database                
-                        if isUnspentOut:
-                            valueBuddyOutput = tx["vout"][n + 1]
-                            value = valueBuddyOutput["value"] *100000000
-                            
-                            print("########## Adding unspent public label: " + datetime.datetime.fromtimestamp(block["time"]).strftime('%Y-%m-%d %H:%M:%S') + "Public Label: " + str(opReturn.rstrip()) + " Value: " + str(value) + " Height: " + str(block["height"]))
-
-                            createPLrecord(chainID, tx["txid"], n + 1, opReturn, value, block["time"], block["height"])
-                            
+                        # if the output is spent then keep count                
+                        if isUnspentOut:                            
+                            pass
                         else:
                             countOutputsWithSpentPublicLabels += 1
                             
@@ -196,12 +207,13 @@ def addUnspentPLRows(chainID):
         
         # for each block save the results from the block scan
         if countOutputsWithErrors > 0 :
-            insertOrUpdateBlockInfoRecord(chainID, h, datetime.datetime.now().timestamp(), countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid)
+            insertOrUpdateBlockInfoRecord(chainID, h, datetime.datetime.now().timestamp(), countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid, block["height"])
         else :
             # completed scan of blocks in range without errors so now mark as done by updating latestCheckedBlockHeight
-            updateLatestCheckedBlockHeight(chainID, block["height"])
+            if block["height"] < best_block["height"] - rescanRecentBlocks :
+                updateLatestCheckedBlockHeight(chainID, block["height"])
             # insert a blockInfo record so that future scans can skip this block
-            insertOrUpdateBlockInfoRecord(chainID, h, datetime.datetime.now().timestamp(), countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid)
+            insertOrUpdateBlockInfoRecord(chainID, h, datetime.datetime.now().timestamp(), countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid, block["height"])
                 
         # end for loop of blocks in range        
                 
@@ -215,6 +227,9 @@ def addUnspentPLRows(chainID):
 #############################################################################################
 
 print("Started Bitcoin Voice data builder...")
+
+# specify the recent blocks to rescan
+rescanRecentBlocks = 10
 
 # setup bitcoin.conf connections
 rpcconnect="127.0.0.1"
@@ -237,8 +252,8 @@ for blockchain in blockchainList :
             print("")
 
             # update the bitcoinVoice DB data set for the blockchain
-            updateSpentPLRows(blockchain["chainID"])
             addUnspentPLRows(blockchain["chainID"])
+            updateSpentPLRows(blockchain["chainID"])
 
 
 
