@@ -2,8 +2,14 @@
 #
 # Bitcoin Voice - Perform a scan of online blockchains for public labels   
 #
-############################################################################################## 
-
+############################################################################################# 
+#
+# STARTUP:
+# python3 blockchainScanner.py <chainID>
+#
+# <chainID> is optional and selects only a single chain, leave blank to scan all online chains
+#
+#############################################################################################
 from plDatabaseInterface import *
 import datetime, sys
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
@@ -107,15 +113,14 @@ def addUnspentPLRows(chainID):
     
     print("Verifying range from block " + str(first_block) + " to " + str(last_block))
 
-    # reset table
-    if first_block < 1060000: 
-        deleteAllPublicLabels(chainID)
-        first_block = 1060000 # this block is around Dec-2016
+    # reset table if the best_block is bef
+    #if best_block["time"] < 1483228800 : 
+    #    deleteAllPublicLabels(chainID)
+    #    best_block = 1060000 # this block is around Dec-2016 on btc_testnet
         
      # don't need to start scanning too early
     if first_block > last_block : 
         print("Perhaps the blockchain needs more synching to get up to date.")
-        last_block = first_block   
         return 
         
         
@@ -139,7 +144,6 @@ def addUnspentPLRows(chainID):
         # for each transaction in a block scan the outputs with public labels 
         for txid in block["tx"]:
             
-
             # extract the raw transaction        
             try:
                 # capture error but continue when invalid txs are found :/
@@ -204,7 +208,7 @@ def addUnspentPLRows(chainID):
 #
 #############################################################################################
 
-print("Connecting to bitcoin rpc ...")
+print("Started Bitcoin Voice data builder...")
 
 # setup bitcoin.conf connections
 rpcconnect="127.0.0.1"
@@ -215,17 +219,20 @@ rpcpassword="abc123123"
 # loop the defined blockchains and process the ones that are marked online
 blockchainList = getBlockchainList()
 for blockchain in blockchainList :
-    # initialize the rpc connection for the blockchain
-    rpcport=blockchain["rpcport"]
-    rpc_connection = initRPCConnection(rpcport, rpcconnect, rpcuser, rpcpassword)
-    
-    if rpc_connection :
-        print("Connected to blockchain " + str(blockchain["chainName"]) + " on port " + str(rpcport))
-        print("")
 
-        # update the bitcoinVoice DB data set for the blockchain
-        updateSpentPLRows(blockchain["chainID"])
-        addUnspentPLRows(blockchain["chainID"])
+    # chainID as startup parameter to scan only a single chain, leave blank to scan all online chains  
+    if len(sys.argv) == 1 or int(blockchain["chainID"]) == int(sys.argv[1]) :
+        # initialize the rpc connection for the blockchain
+        rpcport=blockchain["rpcport"]
+        rpc_connection = initRPCConnection(rpcport, rpcconnect, rpcuser, rpcpassword)
+        
+        if rpc_connection :
+            print("Connected to blockchain " + str(blockchain["chainName"]) + " on port " + str(rpcport))
+            print("")
+
+            # update the bitcoinVoice DB data set for the blockchain
+            updateSpentPLRows(blockchain["chainID"])
+            addUnspentPLRows(blockchain["chainID"])
 
 
 
