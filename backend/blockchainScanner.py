@@ -70,7 +70,7 @@ def initRPCConnection(rpcport, rpcconnect, rpcuser, rpcpassword):
 def updateSpentPLRows(chainID):
     #############################################################################################
     #
-    # Bitcoin Voice - Top Public Labels set spent bitcoinVoicePLRecords  
+    # Bitcoin Voice - Scan the bitcoinVoice DB Top Public Labels and set spent date     
     #
     #############################################################################################
     print("### Updating spent public labels ...")
@@ -94,7 +94,7 @@ def updateSpentPLRows(chainID):
 def addUnspentPLRows(chainID):
     #############################################################################################
     #
-    # Bitcoin Voice - Top Public Labels create unspent bitcoinVoicePLRecords
+    # Bitcoin Voice - Scan the blockchain for Top Public Labels and create unspent bitcoinVoicePLRecords
     #
     #############################################################################################
     print("### Adding unspent public labels ...")
@@ -133,7 +133,11 @@ def addUnspentPLRows(chainID):
     print("Scanning block data for public label outputs...")
     # loop through block hashes in range
     for h in block_hashes:
-        #print(h)    
+        #print(h)  
+        
+        # test if block exists in the blockInfo DB table 
+        # if it exists and countOutputsWithErrors = 0 then skip the blockscan  
+        if blockInfoCheckZeroErrors(chaindID, h) > 0 : continue
         
         # block stats
         countOutputsWithPublicLabels = 0
@@ -196,6 +200,8 @@ def addUnspentPLRows(chainID):
         else :
             # completed scan of blocks in range without errors so now mark as done by updating latestCheckedBlockHeight
             updateLatestCheckedBlockHeight(chainID, block["height"])
+            # insert a blockInfo record so that future scans can skip this block
+            insertOrUpdateBlockInfoRecord(chainID, h, datetime.datetime.now().timestamp(), countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid)
                 
         # end for loop of blocks in range        
                 

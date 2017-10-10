@@ -26,6 +26,15 @@ def updateLatestCheckedBlockHeight(chainID, latest_block):
     cursor = conn.cursor()
     cursor.execute('UPDATE "blockchain" SET "latestCheckedBlockHeight" = %s WHERE "chainID" = %s', (latest_block, chainID,))
     conn.commit()
+    
+#################################################################    
+def blockInfoCheckZeroErrors(chainID, blockhash) :
+    # return the maximum height of all the public labels
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT "blockInfoID" from "blockInfo" where "chainID" = %s and "blockhash" = %s', (chainID, blockhash))
+    
+    return cursor.rowcount
 
 #################################################################    
 def getLatestCheckedBlockHeight(chainID) :
