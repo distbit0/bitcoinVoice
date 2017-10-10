@@ -73,7 +73,7 @@ def updateSpentPLRows(chainID):
     # Bitcoin Voice - Scan the bitcoinVoice DB Top Public Labels and set spent date     
     #
     #############################################################################################
-    print("### Updating spent public labels ...")
+    print("\n### Updating spent public labels ...")
   
     # loop every bitcoinVoicePLRecord row and remove spent votes
     unspentPublicLabels = []
@@ -99,7 +99,8 @@ def addUnspentPLRows(chainID):
     # Bitcoin Voice - Scan the blockchain for Top Public Labels and create unspent bitcoinVoicePLRecords
     #
     #############################################################################################
-    print("### Adding unspent public labels ...")
+
+    print("\n### Adding unspent public labels ...")
         
     # get last block via best block
     best_block_hash = rpc_connection.getbestblockhash()
@@ -255,7 +256,7 @@ for blockchain in blockchainList :
             addUnspentPLRows(blockchain["chainID"])
             updateSpentPLRows(blockchain["chainID"])
 
-
+            print("Completed scan of blockchain " + str(blockchain["chainName"]) + " on port " + str(rpcport))
 
 
 

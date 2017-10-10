@@ -231,7 +231,7 @@ def createPLrecord(chainID, TxID, TxOutputSequence, publicLabel, amount, unixTim
 
     cursor = conn.cursor()
     
-    cursor.execute('UPDATE "publicLabelOutput" SET "publicLabel" = %s, "plBlockHeightCreated" = %s, "amountInSatoshis" = %s, "unixTimeCreated" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s',
+    cursor.execute('UPDATE "publicLabelOutput" SET "publicLabel" = %s, "plBlockHeightCreated" = %s, "amountInSatoshis" = %s, "unixTimeCreated" = %s, "unixTimeSpent" = 0 WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s',
          (publicLabel, blockHeight, amount, unixTime, chainID, TxID, TxOutputSequence))
     
     
@@ -250,6 +250,7 @@ def createPLrecord(chainID, TxID, TxOutputSequence, publicLabel, amount, unixTim
         rec["publicLabel"]          = publicLabel    
         rec["amountInSatoshis"]     = amount    
         rec["unixTimeCreated"]      = unixTime
+        rec["unixTimeCreated"]      = 0
         rec["plBlockHeightCreated"] = blockHeight
         rec["chainID"]              = chainID
         
