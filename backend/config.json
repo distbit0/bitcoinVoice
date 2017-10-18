@@ -1,9 +1,9 @@
 {
 	"uiDefaults": {
 		"rowsCount": 20,
-		"coin": "bch",
-		"timePeriod": "day",
-		"orbitState":"day",
+		"coin": "btc_test",
+		"timePeriod": "All time",
+		"orbitState":"night",
 		"timePeriods": {
 			"Day": 1,
 			"Week": 7,

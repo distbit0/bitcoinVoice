@@ -25,6 +25,11 @@ class HTMLHandler(tornado.web.RequestHandler):
   def get(self):
     fileContents = open(frontendPath + "/index.html").read()
     self.write(fileContents)
+ 
+class tableSortHandler(tornado.web.RequestHandler):
+  def get(self):
+    fileContents = open(frontendPath + "/tableSort.js").read()
+    self.write(fileContents)   
 
 class JSHandler(tornado.web.RequestHandler):
   def get(self):
@@ -53,10 +58,11 @@ class homeHandler(tornado.web.RequestHandler):
       self.write(json.dumps(uiDefaults))
     
     elif function == "getPublicLabelAggregates":
+      rowsCount = getConfig()["uiDefaults"]["rowsCount"]
       chainID = int(self.get_argument("chainID"))
-      startPos = int(self.get_argument("startPos"))
-      endPos = int(self.get_argument("endPos"))
-      startDate = self.get_argument("startDate", default=0)
+      startPos = rowsCount if self.get_argument("startPos") == "" else int(self.get_argument("startPos", default=rowsCount))
+      endPos = 0 if self.get_argument("endPos") == "" else int(self.get_argument("endPos", default=0))
+      startDate = self.get_argument("startDate", default=-1)
       endDate = self.get_argument("endDate", default=100000000000)
       searchTerm = self.get_argument("searchTerm", default="")
 
@@ -71,6 +77,7 @@ application = tornado.web.Application([
   (r"/*", HTMLHandler),
   (r"/js.js", JSHandler),
   (r"/css.css", CSSHandler),
+  (r"/tableSort.js", tableSortHandler),
   (r'/webfavicon.ico()', tornado.web.StaticFileHandler, {'path': frontendPath + '/favicon.ico'}),
   (r'/magnifyingGlass.png()', tornado.web.StaticFileHandler, {'path': frontendPath + '/magnifyingGlass.png'}),
   (r"/shareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/shareTech.ttf'}),
@@ -87,7 +94,6 @@ http_server = tornado.httpserver.HTTPServer(application, ssl_options={
 
 
 if __name__ == "__main__":
-  # previously was listen(80) but received address already in use error
-  redirectApplication.listen(8080)
+  redirectApplication.listen(80)
   http_server.listen(443)
   tornado.ioloop.IOLoop.instance().start()
