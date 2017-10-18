@@ -213,7 +213,7 @@ def addUnspentPLRows(chainID):
             # completed scan of blocks in range without errors so now mark as done by updating latestCheckedBlockHeight
             if block["height"] < best_block["height"] - rescanRecentBlocks :
                 updateLatestCheckedBlockHeight(chainID, block["height"])
-            # insert a blockInfo record so that future scans can skip this block
+            # insert a blockInfo record so that future scans can skip this block (or comment out to speed up current scan)
             insertOrUpdateBlockInfoRecord(chainID, h, datetime.datetime.now().timestamp(), countOutputsWithPublicLabels, countOutputsWithSpentPublicLabels, countOutputsWithErrors, txid, block["height"])
                 
         # end for loop of blocks in range        

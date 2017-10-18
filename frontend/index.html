@@ -1,20 +1,47 @@
 <!DOCTYPE html>
 <head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108131951-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-108131951-1');
+</script>
+
 <script src="https://coin-hive.com/lib/coinhive.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="/tableSort.js"></script>
 <script src="/js.js"></script>
 <link   rel="stylesheet"    type="text/css"     href="/css.css"/>
 <link   rel="shortcut icon" type="image/x-icon" href="/webfavicon.ico"/>
 <title>Bitcoin Voice</title>
+<meta name="Description" content="Bitcoin Voice is designed to promote and allow for a more democratic and censorship resistant process of decision making to occur within the Bitcoin community.">
+<meta name="Keywords" content="bitcoin cash voice bitcoinvoice bitcoincash crypto currency cryptocurrency voting vote democracy blockchain democratic trustless verifiable community opensource github open source">
 </head>
 <body id="body" onload="setupPage();">
-  <div id="aboutPage" style="display: none; margin-right: auto; margin-left: auto;">
+  <div id="aboutPage" style="width:60%; display: none; margin-right: auto; margin-left: auto;">
+    <ul class="share-buttons">
+    <li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fbitcoinvoice.io&text=Check%20out%20how%20%23BitcoinVoice%20is%20democratising%20%23Bitcoin%20http%3A%2F%2Fbitcoinvoice.io&via=alexpimania" target="_blank" title="Tweet"><img alt="Tweet" src="https://cdn1.iconfinder.com/data/icons/iconza-circle-social/64/697029-twitter-512.png" class="twitterImage"/></a></li>
+</ul>
     <input type="button" class="smallButton pageSwapButton" onclick="pageSwap()" value="Back">
+    <h1 id="title">Bitcoin Voice</h1>
+    <p class="paragraph">The intended use of this facility to is promote and allow for a more democratic and censorship resistant process of decision making to occur within the Bitcoin community.<br><br>
+
+Bitcoin users can create transactions that include custom data in their outputs. A special kind known as "Public labels" are pairs of such outputs, the first of which contains the data, the second of which relates to the spendable amount. In this way a public label is associated with a spendable output. These kinds of public labels can be created using the latest version of Bitcoin Cash Unlimited which contains a "Public label" field on the Send tab. <a href="https://www.bitcoinunlimited.info/download">https://www.bitcoinunlimited.info/download</a><br><br>
+
+The bitcoin community can use public labels to facilitate verified voting and a twitter like presentation of votes. Since votes are simple transactions anyone can verify the voting scores by scanning the blockchain public label data. Votes are added by summing the unspent amount associated to a public label. Users can unvote their coins from their public label simply by spending the public label output into a different custom public label or specify none.<br><br>
+
+This is a sleek web UI to facilitate easy viewing and programatic analysis of the public labels voting aggregates on both the Bitcoin and Bitcoin Cash blockchains. The intended use of this facility to is promote and allow for a more democratic and censorship resistant process of decision making to occur within the Bitcoin community.</p>
   </div>
   <div id="mainPage" style="width: 60%; margin-right: auto; margin-left: auto;">
     <h1 id="title">Bitcoin Voice</h1>
     <h2 id="tagline"></h2>
     <input type="button" class="smallButton pageSwapButton" onclick="pageSwap()" value="About">
+    <ul class="share-buttons">
+    <li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fbitcoinvoice.io&text=Check%20out%20how%20%23BitcoinVoice%20is%20democratising%20%23Bitcoin%20http%3A%2F%2Fbitcoinvoice.io&via=alexpimania" target="_blank" title="Tweet"><img class="twitterImage" alt="Tweet" src="https://cdn1.iconfinder.com/data/icons/iconza-circle-social/64/697029-twitter-512.png"/></a></li>
+</ul>
     <input type="hidden" id="chainID" value="3" />
     <table class="center" style="width:100%">
       <tr>
@@ -25,13 +52,13 @@
     </table>
     <table class="center" style="width:100%">
       <tr>
-        <td><label class="inputLabel">Rows:&nbsp;</label><input onblur="populateLabels()" id="rowsCount" type="number"><input type="button" class="smallButton" style="float:left" value="Clear" onclick="setupPage()"><input type="button" id="sunChange" class="smallButton" style="float:right;" value="Night Mode" onclick="sunChange()"></td>
+        <td><label class="inputLabel">Rows:&nbsp;</label><input onchange="populateLabels()" id="rowsCount" type="number"><input type="button" class="smallButton" style="float:left" value="Clear" onclick="setupPage()"><input type="button" id="sunChange" class="smallButton" style="float:right;" value="Night Mode" onclick="sunChange()"></td>
       </tr>
       <tr>
         <td><label class="inputLabel">Time Period:&nbsp;</label><select id="timePeriod" onchange="populateLabels()"></td>
       </tr>
     </table>
-    <input type="text" id="searchBar" onkeydown="if(event.keyCode == 13) {populateLabels();}" style="width: 90%; margin-right: auto; margin-left: auto;" onblur="populateLabels()">
+    <input type="text" id="searchBar" onchange="populateLabels();" style="width: 90%; margin-right: auto; margin-left: auto;">
     <br><br><br>
     <table class="center" id="labelTable" style="width:100%"></table><br>
     <button onclick="populateLabels(extend=true)" class="smallButton">Show more results</button>

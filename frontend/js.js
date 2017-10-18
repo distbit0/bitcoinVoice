@@ -11,18 +11,16 @@ function populateLabels(extend=false)
 {
   var chainID = document.getElementById("chainID").value;
   var rowsCountHTML = document.getElementById("rowsCount");
-  var rowsCount = rowsCountHTML.value;
-  // var coin = returnActiveCoin(); REPLACED BY chainID
+  var rowsCount = parseInt(rowsCountHTML.value);
   var searchTerm = document.getElementById("searchBar").value;
   var startDate = document.getElementById("timePeriod").value;
-  //   var startDate = endDate - document.getElementById("timePeriod").value; // use python date subtraction instead
   var endDate = getCurrentDate();
   var labelTableHTML = document.getElementById("labelTable");
-  var listLength = labelTableHTML.rows.length;
+  var listLength = labelTableHTML.rows.length - 1;
   
   if (extend == false)
   {
-    listLength = labelTableHTML.innerHTML = "";
+    labelTableHTML.innerHTML = "";
     var startPos = rowsCount;
     var endPos = 0; 
   }
@@ -46,8 +44,14 @@ function populateLabels(extend=false)
         var utxoHeader = headerRow.insertCell(2);
         rankHeader.innerHTML = "<b>Rank</b>";
         labelHeader.innerHTML = "<b>Public Label</b>";
-        utxoHeader.innerHTML = "<b>Total Unspent Output</b>";
+        if (chainID == 2 || chainID == 4){
+            utxoHeader.innerHTML = "<b>Total Unspent Output (BCH)</b>";
         }
+        else 
+        {
+        utxoHeader.innerHTML = "<b>Total Unspent Output (BTC)</b>";
+        }
+      }
       var body = labelTableHTML.createTBody();
       for (var i = 0; i < labels.length; i++)
       {
@@ -57,15 +61,11 @@ function populateLabels(extend=false)
         var utxo = bodyRow.insertCell(2);
         rank.innerHTML = labels[i]["rank"];
         label.innerHTML = labels[i]["label"];
-        utxo.innerHTML = labels[i]["utxo"];
+        utxo.innerHTML = labels[i]["utxo"].toFixed(8)
       }
       if (extend=true)
       {
         window.scrollTo(0,document.body.scrollHeight);
-      }
-      if ($("#body").hasClass("nightTimeBody"))
-      {
-        $("#labelTable tr:nth-child(even)").addClass("nightTimeRows");
       }
     }
   };
@@ -75,46 +75,73 @@ function populateLabels(extend=false)
 }
 
 
-function sunChange(command="toggle"){
+function sunChange(init=false, command="toggle"){
   var bodyHTML = $("#body");
-  var secondLabelTableRowsHTML = $("#labelTable tr:nth-child(even)");
   var sunChangeButtonHTML = document.getElementById("sunChange");
   function toDay(){
+      setCookie("sun", "day", 10000);
       bodyHTML.removeClass("nightTimeBody");
-      secondLabelTableRowsHTML.removeClass("nightTimeRows");
+      $("#labelTable").removeClass("nightTimeLabelTable");
       sunChangeButtonHTML.value = "Night Mode";
   }
       
   function toNight(){
+      setCookie("sun", "night", 10000);
       bodyHTML.addClass("nightTimeBody");
-      secondLabelTableRowsHTML.addClass("nightTimeRows");
+      $("#labelTable").addClass("nightTimeLabelTable");
       sunChangeButtonHTML.value = "Day Mode";
   }
-  if (command == "toggle")
+  if (init == true)
   {
-    if (bodyHTML.hasClass("nightTimeBody"))
-    {
-      toDay();
+    if (getCookie("sun") != ""){
+        if (getCookie("sun") == "day")
+            {
+                toDay();
+            }
+        else
+            {
+                toNight();
+            }
     }
     else
+        {
+            change(command);
+        }
+  }
+  else
     {
-      toNight();
+        change(command);
     }
-  }
-  else if (command == "night"){
-    toNight();
-  }
-  else if (command == "day"){
-    toDay();
+  function change(command){
+      if (command == "toggle")
+      {
+        if (bodyHTML.hasClass("nightTimeBody"))
+        {
+          toDay();
+        }
+        else
+        {
+          toNight();
+        }
+      }
+      else if (command == "night"){
+        toNight();
+      }
+      else if (command == "day"){
+        toDay();
+      }
   }
 }
 
 
 function setupPage()
 {
+  window.setInterval(populateLabels, 10*1000*60);
+  try{
   initCoinHive();
+  }catch(e){}
   clearScreen();
-  getUiDefaults();
+  getUiDefaults(init=true);
   populateLabels();
   mobileAdjust();
 }
@@ -167,7 +194,7 @@ function selectCoin(coin, event=false)
 }
 
 
-function getUiDefaults()
+function getUiDefaults(init=false)
 {
   var req = new XMLHttpRequest();
   req.open("GET", "/api/?function=getUiDefaults", false);
@@ -182,7 +209,7 @@ function getUiDefaults()
   var rowsCountHTML = document.getElementById("rowsCount");
   var timePeriodHTML = document.getElementById("timePeriod");
   selectCoin(coin);
-  sunChange(orbitState);
+  sunChange(init=init, orbitState);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;
   
@@ -197,10 +224,10 @@ function getUiDefaults()
     startDate.setDate(startDate.getDate() - timePeriods[periodName]);  
     var option = document.createElement("option");
     option.innerHTML = periodName;
-    if (periodName = "All time") { option.selected = true};
     timePeriodHTML.add(option);
     if (periodName == timePeriod)
     {
+      option.selected = true
       timePeriodHTML.value = timePeriod;
     }
     option.value = startDate.getTime()/1000;
@@ -219,22 +246,8 @@ function clearScreen()
   timePeriodHTML.innerHTML = "";
   searchBarHTML.value = "";
   labelTableHTML.value = "";
-  }
-  
-/* replaced by chainID
-function returnActiveCoin()
-{
-  var bchHTML = document.getElementById("bch");
-  if (bchHTML.classList.contains("active"))
-  {
-    return "bch";
-  }
-  else
-  {
-    return "btc";
-  }
 }
-*/
+  
 
 function getCurrentDate()
 {
@@ -296,4 +309,29 @@ function pageSwap(){
     mainPageHTML.style.display = "none";
     aboutPageHML.style.display = "";
   }
+}
+
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }

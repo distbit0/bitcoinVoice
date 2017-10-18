@@ -175,8 +175,18 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate):
     #print(datetime.datetime.fromtimestamp(float(endDate)).strftime('%Y-%m-%d %H:%M:%S'))
     
     if publicLabel :
+        '''
         # insert wild cards 
         publicLabel = "%" + publicLabel + "%"
+        '''
+        
+        #############################################################################################
+        ##### NOTE: THE ABOVE SHOULD NOT BE USED. USING WIIDCARDS AT THE *START* OF THE PL ALL THE TIME MAKES THE QUERY INEFFICIENT (I.E. WILL NOT USE INDEX EFFICIENTLY)
+        #####       INSTEAD, HAVE THE USER SPECIFY ANY WILDCARDS TO USE AT THE START OF THE PL
+        #############################################################################################
+        # INSERT WILDCARD AT THE END OF SPECIFIED PL. User to specify to use any at the START of the PL
+        publicLabel = publicLabel + "%"
+        
         cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0 and "publicLabel" ilike %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
         
         
