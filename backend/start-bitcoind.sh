@@ -1,3 +1,4 @@
 # the ~ must be replaced with the complete path to the blockchain folders
-bitcoind -datadir=~/.bitcoin &
-bitcoind -datadir=~/.bitcoinTestnet &
+$HOME/bitcoinCashUnlimited/bin/bitcoind -datadir=$HOME/.bitcoinCash &
+bitcoind -datadir=$HOME/.bitcoin &
+bitcoind -datadir=$HOME/.bitcoinTestnet &

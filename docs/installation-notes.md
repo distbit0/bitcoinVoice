@@ -10,8 +10,8 @@ txindex=1
 
 
 # code dependencies to be intalled 
-
-
+sudo pip3 install psycopg2
+sudo pip3 install python-bitcoinrpc
 
 
 # postgres setup
