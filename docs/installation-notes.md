@@ -15,6 +15,6 @@ sudo pip3 install python-bitcoinrpc
 
 
 # postgres setup
-
+sudo apt install postgres-9.4 pgadmin3
 
 
