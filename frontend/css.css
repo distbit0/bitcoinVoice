@@ -29,16 +29,29 @@ table {
 #rowsCount {
 width: 70px;
 }
-#rowsCount, .inputLabel, #timePeriod{
+#rowsCount, #timePeriod{
   height: 36px;
   float: left;
-  text-align: right;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 20px;
+  display: inline-block;
+  color: #4BCF93;
+  margin: auto;
+  }
+.inputLabel {
+  height: 36px;
+  float: left;
+  text-align: center;
   border-radius: 5px;
   font-size: 30px;
   display: inline-block;
   color: #4BCF93;
+  margin: auto;
   }
-
+a{
+    color: unset;
+}
 th, td {
     padding: 15px;
 }
@@ -71,7 +84,7 @@ th, td {
 
 body {text-align:center;}
 table.center {
-  margin-left:auto; 
+  margin-left:auto;
   margin-right:auto;
 }
 .coin {
@@ -85,7 +98,7 @@ table.center {
     cursor: pointer;
     margin: 12px;
     width:20%;
-    border-radius:5px; 
+    border-radius:5px;
     font-family: 'hairline', sans-serif;
 }
 
@@ -128,7 +141,7 @@ table.center {
 }
 
 .smallButton {
-  width: 200px;
+  width: 120px;
   height: 36px;
   font-size: 20px;
   border: 2px solid #4BCF93;
@@ -141,7 +154,20 @@ table.center {
   margin-bottom: auto;
   color: #4BCF93;
 }
-
+.longButton{
+  width: 200px;
+  height: 36px;
+  font-size: 20px;
+  border: 2px solid #4BCF93;
+  background-color: inherit;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px;
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: auto;
+  color: #4BCF93;
+    }
 .smallButton:hover {
     background-color: #4BCF93;
     color: white;
@@ -151,15 +177,15 @@ table.center {
   background-color: inherit;
   border: 1px solid #4BCF93;
 }
-  
+
 thead {
   border: 2px solid #4BCF93;
   font-size: 21px;
   padding: 2px;
   color: #4BCF93;
   }
-  
-  
+
+
 .pageSwapButton {
   position: fixed;
   right: 50px;
@@ -167,7 +193,7 @@ thead {
   height:50px;
   width:100px;
   }
-  
+
 
 .paragraph {
     color: #4BCF93;
@@ -175,7 +201,7 @@ thead {
     float:left;
     text-align: left;
     }
-    
+
 #labelTable.nightTimeLabelTable tr:nth-child(even){
      background-color: #071F22 !important;
 }
@@ -186,8 +212,8 @@ ul.share-buttons, .twitterImage{
   position: fixed;
   right: 175px;
   top: 30px;
-  width:50px; 
-  height:50px; 
+  width:50px;
+  height:50px;
   float: right
 }
 

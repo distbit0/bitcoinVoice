@@ -12,14 +12,18 @@ def getPublicLabelAggregates(chainID, startPos, endPos, startDate, endDate, sear
     output = []
 
     # get a list of filtered unaggregated unspent public labels
-    records = getFilteredPublicLabels(chainID, searchTerm, startDate, endDate, "yes")
+    records = getFilteredPublicLabels(chainID, searchTerm, startDate, endDate, "")
 
     # loop each sub public label into the aggregate list
     for record in records:
-        if record["publicLabel"] in publicLabels:
-            publicLabels[record["publicLabel"]] += record["amountInSatoshis"]/100000000
+        if record["unixTimeSpent"] == 0:
+            if record["publicLabel"] in publicLabels:
+                publicLabels[record["publicLabel"]] += record["amountInSatoshis"]/100000000
+            else:
+                publicLabels[record["publicLabel"]] = record["amountInSatoshis"]/100000000
         else:
-            publicLabels[record["publicLabel"]] = record["amountInSatoshis"]/100000000
+            if not record["publicLabel"] in publicLabels:
+                publicLabels[record["publicLabel"]] = 0
     i = 0
 
     # sort the aggregated list
@@ -38,7 +42,13 @@ def getPublicLabelOutputs(chainID, startDate, endDate, publicLabel):
     records = getFilteredPublicLabels(chainID, publicLabel, startDate, endDate, "")
     for record in records:
         #if record["publicLabel"] == publicLabel: #since getFilteredPublicLabels returns labels that aren't exact matches, we remove them here
-            utxos.append({"txid": record["txID"], "amt": record["amountInSatoshis"]/100000000, "blockHeight": record["plBlockHeightCreated"], "outputNumber": record["txOutputSequence"], "unixTimeSpent": record["unixTimeSpent"], "txIDSpent": record["txIDSpent"]})
+            utxos.append({"txid": record["txID"],
+                            "amt": record["amountInSatoshis"]/100000000,
+                            "plblockHeightCreated": record["plBlockHeightCreated"],
+                            "txOutputSequence": record["txOutputSequence"],
+                            "unixTimeSpent": record["unixTimeSpent"],
+                            "txIDSpent": record["txIDSpent"],
+                            "plBlockHeightSpent": record["plBlockHeightSpent"]})
 
     return utxos
 

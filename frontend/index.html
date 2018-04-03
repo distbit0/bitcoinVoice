@@ -50,16 +50,19 @@ This is a sleek web UI to facilitate easy viewing and programatic analysis of th
     </table>
     <table class="center" style="width:100%">
       <tr>
-        <td><label class="inputLabel">Rows:&nbsp;</label>
-        <input onchange="populateLabels()" id="rowsCount" type="number"><input type="button" class="smallButton" style="float:left" value="Clear" onclick="setupPage()"><input type="button" id="sunChange" class="smallButton" style="float:right;" value="Night Mode" onclick="sunChange()"></td>
-      </tr>
-      <tr>
+        <td><input type="button" id="sunChange" class="smallButton" style="float:right;" value="Night Mode" onclick="sunChange()"></td>
         <td><label class="inputLabel">Time Period:&nbsp;</label><select id="timePeriod" onchange="populateLabels()"></td>
+        <td><label class="inputLabel">Rows:&nbsp;</label>
+        <input onchange="populateLabels()" id="rowsCount" type="number">
+        <input type="button" class="smallButton" style="float:left" value="Reset" onclick="setupPage()"></td>
       </tr>
     </table>
     <input type="text" id="searchBar" onchange="populateLabels();" style="width: 90%; margin-right: auto; margin-left: auto;">
-    <br><br><br>
+    <br><br><div style="width:100%"><p class="paragraph" style="font-size: 20px; float: unset; margin: auto; text-align: center;">This table totals transactions in the blockchain that have been tagged using the same public label message.
+    <br> If you want to push a public label higher then send a transaction to yourself using that public label.
+    <br> The transaction total will stay with the public label as long as it remains unspent.
+    </p></div><br>
     <table class="center" id="labelTable" style="width:100%"></table><br>
-    <button onclick="populateLabels(extend=true)" class="smallButton">Show more results</button>
+    <button "onclick="populateLabels(extend=true)" class="longButton">Show more results</button>
   </div>
 </body>

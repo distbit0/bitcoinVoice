@@ -13,7 +13,6 @@
 from plDatabaseInterface import *
 import datetime, sys, time
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
-import logging
 
 def extractOpReturnText(script):
     #############################################################################################
@@ -35,8 +34,8 @@ def extractOpReturnText(script):
         opReturn = binascii.unhexlify(opReturn[1]).decode("utf-8")
         opReturn = opReturn.replace("\0", "")
         return opReturn
-    except:
-        return ""
+    except: return ""
+
 
 
 def initRPCConnection(rpcport, rpcconnect, rpcuser, rpcpassword):
@@ -193,12 +192,8 @@ def addUnspentPLRows(chainID):
                         opReturn = extractOpReturnText(script)
 
                         # if there is an opReturn then extract the value buddy from the following output
-                        if n + 1 <= len(tx["vout"]) and opReturn:
+                        if n + 1 <= len(tx["vout"])-1 and opReturn:
                             countOutputsWithPublicLabels += 1
-
-                            # this is already done above?
-                            #if not len(tx["vout"]) > n+2: #if there isn't a value buddy, continue'
-                            #    continue
 
                             valueBuddyOutput = tx["vout"][n + 1]
                             value = valueBuddyOutput["value"] *100000000

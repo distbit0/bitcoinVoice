@@ -108,7 +108,7 @@ def getUnspentPublicLabels(chainID) :
     # return a list of transactions
     cursor = conn.cursor()
 
-    cursor.execute('SELECT "txID", "txOutputSequence" from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0',(chainID,))
+    cursor.execute('SELECT "txID", "txOutputSequence", "publicLabel" from "publicLabelOutput" where "chainID" = %s and "unixTimeSpent" = 0',(chainID,))
 
     # get the result set
     desc = cursor.description
@@ -181,14 +181,6 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate, isUnSpent)
 
         # insert wild cards
         publicLabel = "%" + publicLabel + "%"
-
-
-        #############################################################################################
-        ##### NOTE: THE ABOVE SHOULD NOT BE USED. USING WIIDCARDS AT THE *START* OF THE PL ALL THE TIME MAKES THE QUERY INEFFICIENT (I.E. WILL NOT USE INDEX EFFICIENTLY)
-        #####       INSTEAD, HAVE THE USER SPECIFY ANY WILDCARDS TO USE AT THE START OF THE PL
-        #############################################################################################
-        # INSERT WILDCARD AT THE END OF SPECIFIED PL. User to specify to use any at the START of the PL
-        #publicLabel = publicLabel + "%"
 
         cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s ' + isUnSpent + ' and "publicLabel" ilike %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
 
