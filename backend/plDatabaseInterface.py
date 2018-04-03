@@ -120,13 +120,13 @@ def getUnspentPublicLabels(chainID) :
     return publicLabels
 
 
-def setSpentTime(chainID, TxID, TxOutputSequence, Time, Height):
+def setSpentTime(chainID, TxID, TxOutputSequence, Time, Height, txIDSpent):
     # update the unixTimeSpent for a publicLabelOutput record - given a TxID and sequence#
     # NOTE - Currently silent if no record is found to delete.
 
     cursor = conn.cursor()
 
-    cursor.execute('UPDATE "publicLabelOutput" SET "unixTimeSpent" = %s, "plBlockHeightSpent" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (Time, Height, chainID, TxID, TxOutputSequence,))
+    cursor.execute('UPDATE "publicLabelOutput" SET "unixTimeSpent" = %s, "plBlockHeightSpent" = %s, "txIDSpent" = %s WHERE "chainID" = %s and "txID" = %s and "txOutputSequence" = %s', (Time, Height, txIDSpent, chainID, TxID, TxOutputSequence,))
 
     conn.commit()
 
@@ -178,17 +178,17 @@ def getFilteredPublicLabels(chainID, publicLabel, startDate, endDate, isUnSpent)
     if isUnSpent : isUnSpent = ' and "unixTimeSpent" = 0 '
 
     if publicLabel :
-        '''
+
         # insert wild cards
         publicLabel = "%" + publicLabel + "%"
-        '''
+
 
         #############################################################################################
         ##### NOTE: THE ABOVE SHOULD NOT BE USED. USING WIIDCARDS AT THE *START* OF THE PL ALL THE TIME MAKES THE QUERY INEFFICIENT (I.E. WILL NOT USE INDEX EFFICIENTLY)
         #####       INSTEAD, HAVE THE USER SPECIFY ANY WILDCARDS TO USE AT THE START OF THE PL
         #############################################################################################
         # INSERT WILDCARD AT THE END OF SPECIFIED PL. User to specify to use any at the START of the PL
-        publicLabel = publicLabel + "%"
+        #publicLabel = publicLabel + "%"
 
         cursor.execute('SELECT * from "publicLabelOutput" where "chainID" = %s ' + isUnSpent + ' and "publicLabel" ilike %s and "unixTimeCreated" >= %s and "unixTimeCreated" <= %s order by "txID", "txOutputSequence"', (chainID, publicLabel, float(startDate), float(endDate),))
 

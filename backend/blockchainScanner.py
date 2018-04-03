@@ -88,9 +88,8 @@ def updateSpentPLRows(chainID):
         # the output has just been spent
         if not isUnspentOut:
             print("########## Updating spent public label ..." + str(tx["txID"]) + " " + str(tx["txOutputSequence"]))
-            # since gettxout only returns unspent data its hard to know the block when the public label was spent
-            # spentBlock = rpc_connection.getblock(isUnspentOut ["findSpentblock"])
-            setSpentTime(chainID, tx["txID"], tx["txOutputSequence"], time.time(), 0)
+            # since gettxout only returns unspent data its hard to know the block when the public label was spent at this time
+            setSpentTime(chainID, tx["txID"], tx["txOutputSequence"], time.time(), null, null)
         #else :
         #    print("UnSpent.")
 
@@ -136,6 +135,10 @@ def addUnspentPLRows(chainID):
             # batch support : print timestamps of blocks 0 to 99 in 2 RPC round-trips:
             commands = [[ "getblockhash", height] for height in range(first_block, last_block)]
             block_hashes = rpc_connection.batch_(commands)
+
+            # load the public labels for spent test
+            unspentPublicLabels = []
+            unspentPublicLabels = getUnspentPublicLabels(chainID)
 
             print("Scanning block data for public label outputs...")
             # loop through block hashes in range
@@ -213,7 +216,22 @@ def addUnspentPLRows(chainID):
                             else:
                                 countOutputsWithSpentPublicLabels += 1
 
+                            # refresh public labels
+                            unspentPublicLabels = getUnspentPublicLabels(chainID)
                     # end for loop of outputs in transactions
+
+                    # search here for spend txs that relate to local public labels and set the plBlockHeightSpent field
+                    for n, txinput in enumerate(tx["vin"]):
+                        #print (txinput)
+                        if not "coinbase" in list(txinput.keys()) :
+                            for pltx in unspentPublicLabels :
+                                #print(txinput)
+                                if pltx["txID"] == txinput["txid"] and pltx["txOutputSequence"] == txinput["vout"] :
+                                    # the transaction tx["txID"], tx["txOutputSequence"] spends a public label
+                                    setSpentTime(chainID, pltx["txID"], pltx["txOutputSequence"], time.time(), block["height"], txid)
+                                    print("########## Updating spent public label in block " + str(block["height"]) + " : " + pltx["publicLabel"])
+                    # end for loop of inputs
+
                 # end for loop of transactions in block
 
                 # for each block save the results from the block scan
@@ -233,7 +251,7 @@ def addUnspentPLRows(chainID):
                 print ("Block # : " + str(block["height"]))
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 print(str(sys.exc_info()) + "\n\nOn line: " + str(exc_tb.tb_lineno))
-                #sys.exit()
+                sys.exit()
 
 #############################################################################################
 #

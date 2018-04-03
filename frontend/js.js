@@ -60,6 +60,7 @@ function populateLabels(extend=false)
       }
     }
   };
+  // gets the data applying the specified search criteria
   req.open("GET", "/api/?function=getPublicLabelAggregates&chainID=" + chainID + "&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm, true);
   req.send();
 

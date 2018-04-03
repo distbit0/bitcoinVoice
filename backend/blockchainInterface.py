@@ -38,7 +38,7 @@ def getPublicLabelOutputs(chainID, startDate, endDate, publicLabel):
     records = getFilteredPublicLabels(chainID, publicLabel, startDate, endDate, "")
     for record in records:
         #if record["publicLabel"] == publicLabel: #since getFilteredPublicLabels returns labels that aren't exact matches, we remove them here
-            utxos.append({"txid": record["txID"], "amt": record["amountInSatoshis"]/100000000, "blockHeight": record["plBlockHeightCreated"], "outputNumber": record["txOutputSequence"], "unixTimeSpent": record["unixTimeSpent"]})
+            utxos.append({"txid": record["txID"], "amt": record["amountInSatoshis"]/100000000, "blockHeight": record["plBlockHeightCreated"], "outputNumber": record["txOutputSequence"], "unixTimeSpent": record["unixTimeSpent"], "txIDSpent": record["txIDSpent"]})
 
     return utxos
 
