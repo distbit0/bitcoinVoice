@@ -1,8 +1,8 @@
 #############################################################################################
 #
-# Bitcoin Voice - Web API    
+# Bitcoin Voice - Web API
 #
-############################################################################################## 
+##############################################################################################
 
 import sys
 import os
@@ -19,17 +19,17 @@ path = sys.argv[1]
 def getConfig():
   import json
   return json.loads(open(backendPath + "/config.json").read())
-  
-  
+
+
 class HTMLHandler(tornado.web.RequestHandler):
   def get(self):
     fileContents = open(frontendPath + "/index.html").read()
     self.write(fileContents)
- 
+
 class tableSortHandler(tornado.web.RequestHandler):
   def get(self):
     fileContents = open(frontendPath + "/tableSort.js").read()
-    self.write(fileContents)   
+    self.write(fileContents)
 
 class JSHandler(tornado.web.RequestHandler):
   def get(self):
@@ -43,20 +43,20 @@ class CSSHandler(tornado.web.RequestHandler):
     self.write(fileContents)
 
 class redirect (tornado.web.RequestHandler):
-  def get(self):  
+  def get(self):
     self.redirect("https://" +  self.request.host + self.request.uri)
-    
+
 class homeHandler(tornado.web.RequestHandler):
   # This routing table directs off to the services to support the UI.
   # Route to the appropriate function, passing in parameters as required.
-  
- def get(self):  
+
+ def get(self):
     function = self.get_argument("function")
-    
+
     if function == "getUiDefaults":
       uiDefaults = getConfig()["uiDefaults"]
       self.write(json.dumps(uiDefaults))
-    
+
     elif function == "getPublicLabelAggregates":
       rowsCount = getConfig()["uiDefaults"]["rowsCount"]
       chainID = int(self.get_argument("chainID"))
@@ -68,6 +68,17 @@ class homeHandler(tornado.web.RequestHandler):
 
       labels = interface.getPublicLabelAggregates(chainID, startPos, endPos, startDate, endDate, searchTerm)
       self.write(json.dumps(labels))
+
+    elif function == "getPublicLabelOutputs":
+      rowsCount = getConfig()["uiDefaults"]["rowsCount"]
+      chainID = int(self.get_argument("chainID"))
+      startDate = self.get_argument("startDate", default=-1)
+      endDate = self.get_argument("endDate", default=100000000000)
+      publicLabel = self.get_argument("publicLabel", default="")
+
+      labels = interface.getPublicLabelOutputs(chainID, startDate, endDate, publicLabel)
+      self.write(json.dumps(labels))
+
 
 redirectApplication = tornado.web.Application([
         (r'/', redirect)
@@ -83,13 +94,13 @@ application = tornado.web.Application([
   (r"/shareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/shareTech.ttf'}),
   (r"/hairline.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/hairline.ttf'}),
 ], ssl_options={
-    "certfile": os.path.join("ssl/certificate.crt"),
-    "keyfile": os.path.join("ssl/private.key"),
+    "certfile": os.path.join(backendPath, "ssl/certificate.crt"),
+    "keyfile": os.path.join(backendPath, "ssl/private.key"),
 })
 
 http_server = tornado.httpserver.HTTPServer(application, ssl_options={
-    "certfile": os.path.join("ssl/certificate.crt"),
-    "keyfile": os.path.join("ssl/private.key"),
+    "certfile": os.path.join(backendPath, "ssl/certificate.crt"),
+    "keyfile": os.path.join(backendPath, "ssl/private.key"),
 })
 
 

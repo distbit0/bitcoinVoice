@@ -173,6 +173,7 @@ thead {
     color: #4BCF93;
     font-size: 30px;
     float:left;
+    text-align: left;
     }
     
 #labelTable.nightTimeLabelTable tr:nth-child(even){
