@@ -82,6 +82,10 @@ function populatePublicLabels(extend=false)
   var publicLabel = searchParams.get('publicLabel');
   var publicLabelMessage = document.getElementById("publicLabelMessage");
   publicLabelMessage.innerHTML = publicLabel;
+  if (!publicLabel) {
+      var tableMessage = document.getElementById("tableMessage");
+      tableMessage.innerHTML = "This table shows the full list of transactions with public labels.<br>Search using the transaction id.";
+      }
 
   var labelTableHTML = document.getElementById("labelTable");
   var listLength = labelTableHTML.rows.length - 1;
@@ -120,7 +124,6 @@ function populatePublicLabels(extend=false)
             utxoHeader.innerHTML = "<b>Total Output (BTC)</b>";
         }
         var spentHeader = headerRow.insertCell(3);
-
         spentHeader.innerHTML = "<b>Spent?</b>";
 
       }
@@ -162,6 +165,14 @@ function populatePublicLabels(extend=false)
 
 }
 
+function txSearch()
+{
+    var chainID = document.getElementById("chainID").value;
+    var searchTerm = document.getElementById("searchBar").value;
+    var startDate = document.getElementById("timePeriod").value;
+    var endDate = getCurrentDate();
+    location.href = "/publiclabel.html&chainID=" + chainID + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + encodeURI(searchTerm) + "&publicLabel=";
+}
 
 function sunChange(init=false, command="toggle"){
   var bodyHTML = $("#body");
@@ -336,8 +347,7 @@ function getUiDefaults(init=false)
   var orbitState = uiDefaults["orbitState"];
   var rowsCountHTML = document.getElementById("rowsCount");
   var timePeriodHTML = document.getElementById("timePeriod");
-  selectCoin(coin);
-  selectCoinByUrl();
+  selectCoin('bch');
   sunChange(init=init, orbitState);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;

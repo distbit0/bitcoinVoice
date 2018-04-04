@@ -35,7 +35,9 @@ The bitcoin community can use public labels to facilitate verified voting and a 
 This is a sleek web UI to facilitate easy viewing and programatic analysis of the public labels voting aggregates on both the Bitcoin and Bitcoin Cash blockchains. The intended use of this facility to is promote and allow for a more democratic and censorship resistant process of decision making to occur within the Bitcoin community.</p>
   </div>
   <div id="mainPage" style="width: 60%; margin-right: auto; margin-left: auto;">
-    <a href="/"><h1 id="title">Bitcoin Voice</h1></a>
+    <h1 id="title">Bitcoin Voice</h1>
+    <p class="paragraph" style="font-size: 15px;float: unset; margin: auto; text-align: center;" >All the data is 100% verifiable sourced directly from blockchain data.</p>
+    <a href="https://github.com/picrypto/bitcoinVoice" style="font-size: 15px;">https://github.com/picrypto/bitcoinVoice</a>
     <h2 id="tagline"></h2>
     <input type="button" class="smallButton pageSwapButton" onclick="pageSwap()" value="About">
     <ul class="share-buttons">
@@ -52,6 +54,8 @@ This is a sleek web UI to facilitate easy viewing and programatic analysis of th
     <table class="center" style="width:100%">
       <tr>
         <td><input type="button" id="sunChange" class="smallButton" style="float:right;" value="Night Mode" onclick="sunChange()"></td>
+        <td><input type="button" id="txSearch" class="smallButton" style="float:right;" value="Tx Search" onclick="txSearch()"></td>
+
         <td><label class="inputLabel">Time Period:&nbsp;</label><select id="timePeriod" onchange="populateLabels()"></td>
         <td><label class="inputLabel">Rows:&nbsp;</label>
         <input onchange="populateLabels()" id="rowsCount" type="number">

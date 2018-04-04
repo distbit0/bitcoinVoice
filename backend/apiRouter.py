@@ -93,7 +93,6 @@ redirectApplication = tornado.web.Application([
 application = tornado.web.Application([
   (r"/publiclabel.*", publicLabelHTMLHandler),
   (r"/index.*", HTMLHandler),
-  #(r"/.*", HTMLHandler),
   (r"/", HTMLHandler),
   (r"/api/", homeHandler),
   (r"/js.js", JSHandler),
