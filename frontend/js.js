@@ -139,7 +139,12 @@ function populatePublicLabels(extend=false)
 
         var date = new Date(labels[i]["unixTimeCreated"]*1000);
         txDate.innerHTML = date.toDateString();
-        txID.innerHTML = labels[i]["txid"];
+
+        if (publicLabel)
+            txID.innerHTML = labels[i]["txid"];
+        else
+            txID.innerHTML = "<a href=/publiclabel.html&chainID=" + chainID + "&startDate=" + startDate + "&endDate=" + endDate + "&publicLabel=" + encodeURI(labels[i]["publicLabel"]) + " >" + labels[i]["txid"] + "</a>";
+
         utxo.innerHTML = labels[i]["amt"].toFixed(8);
 
         if (labels[i]["unixTimeSpent"] == 0)
@@ -348,6 +353,7 @@ function getUiDefaults(init=false)
   var rowsCountHTML = document.getElementById("rowsCount");
   var timePeriodHTML = document.getElementById("timePeriod");
   selectCoin('bch');
+  selectCoinByUrl();
   sunChange(init=init, orbitState);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;

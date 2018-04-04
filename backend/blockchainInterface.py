@@ -59,7 +59,8 @@ def getPublicLabelOutputs(chainID, startDate, endDate, publicLabel, searchByTxID
                                 "unixTimeCreated": record["unixTimeCreated"],
                                 "unixTimeSpent": record["unixTimeSpent"],
                                 "txIDSpent": record["txIDSpent"],
-                                "plBlockHeightSpent": record["plBlockHeightSpent"]})
+                                "plBlockHeightSpent": record["plBlockHeightSpent"],
+                                "publicLabel": record["publicLabel"]})
 
     #utxos = utxos[endPos:startPos]
 
