@@ -76,8 +76,10 @@ function populatePublicLabels(extend=false)
   var rowsCountHTML = document.getElementById("rowsCount");
   var rowsCount = parseInt(rowsCountHTML.value);
   var searchTerm = document.getElementById("searchBar").value;
-  var startDate = searchParams.get('startDate');
-  var endDate = searchParams.get('endDate');
+  var startDate = document.getElementById("timePeriod").value;
+  var endDate = getCurrentDate();
+  //var startDate = searchParams.get('startDate');
+  //var endDate = searchParams.get('endDate');
 
   var publicLabel = searchParams.get('publicLabel');
   var publicLabelMessage = document.getElementById("publicLabelMessage");
@@ -325,15 +327,7 @@ function selectCoin(coin, event=false)
     } catch (e) {}
 
 
-  if (event){
-      if (pageHTML == "index")
-          populateLabels();
-
-      if (pageHTML == "publiclabel")
-      {
-          location.href = "/index.html&chainID=" + chainID.value;
-      }
-  }
+  if (event) location.href = "/index.html&chainID=" + chainID.value;
 
 }
 
