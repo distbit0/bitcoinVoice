@@ -24,9 +24,9 @@ def getPublicLabelAggregates(chainID, startPos, endPos, startDate, endDate, sear
         else:
             if not record["publicLabel"] in publicLabels:
                 publicLabels[record["publicLabel"]] = 0
-    i = 0
 
     # sort the aggregated list
+    i = 0
     for key, value in sorted(publicLabels.items(), key=lambda i: i[1], reverse=True):
         i+= 1
         output.append({"rank": i, "label": key, "amt": value})
@@ -34,22 +34,34 @@ def getPublicLabelAggregates(chainID, startPos, endPos, startDate, endDate, sear
     return output
 
 
+
 # returns a list of non-aggregated public labels that are unspent so aggregate layer can use drill down on a label
-def getPublicLabelOutputs(chainID, startDate, endDate, publicLabel):
+def getPublicLabelOutputs(chainID, startDate, endDate, publicLabel, searchByTxID):
     utxos = []
+    publicLabels = {}
 
     # get a list of filtered unaggregated unspent public labels
     records = getFilteredPublicLabels(chainID, publicLabel, startDate, endDate, "")
     for record in records:
-        #if record["publicLabel"] == publicLabel: #since getFilteredPublicLabels returns labels that aren't exact matches, we remove them here
-            utxos.append({"txid": record["txID"],
-                            "amt": record["amountInSatoshis"]/100000000,
-                            "plblockHeightCreated": record["plBlockHeightCreated"],
-                            "txOutputSequence": record["txOutputSequence"],
-                            "unixTimeSpent": record["unixTimeSpent"],
-                            "txIDSpent": record["txIDSpent"],
-                            "plBlockHeightSpent": record["plBlockHeightSpent"]})
+        if record["txID"] == searchByTxID or not searchByTxID:
+            publicLabels[record["txID"]] = record["unixTimeCreated"]
+
+    # sort the list by unixTimeCreated
+    i = 0
+    for key, value in sorted(publicLabels.items(), key=lambda i: i[1], reverse=True):
+        i+= 1
+        for record in records :
+            if record["txID"] == key :
+                utxos.append({"txid": record["txID"],
+                                "amt": record["amountInSatoshis"]/100000000,
+                                "plblockHeightCreated": record["plBlockHeightCreated"],
+                                "txOutputSequence": record["txOutputSequence"],
+                                "unixTimeCreated": record["unixTimeCreated"],
+                                "unixTimeSpent": record["unixTimeSpent"],
+                                "txIDSpent": record["txIDSpent"],
+                                "plBlockHeightSpent": record["plBlockHeightSpent"]})
+
+    #utxos = utxos[endPos:startPos]
 
     return utxos
-
 

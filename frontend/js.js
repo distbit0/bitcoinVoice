@@ -51,7 +51,7 @@ function populateLabels(extend=false)
         var label = bodyRow.insertCell(1);
         var utxo = bodyRow.insertCell(2);
         rank.innerHTML = labels[i]["rank"];
-        label.innerHTML = "<a href=/api/?function=getPublicLabelOutputs&chainID=" + chainID + "&startDate=" + startDate + "&endDate=" + endDate + "&publicLabel=" + encodeURI(labels[i]["label"]) + " >" + labels[i]["label"] + "</a>";
+        label.innerHTML = "<a href=/publiclabel.html&chainID=" + chainID + "&startDate=" + startDate + "&endDate=" + endDate + "&publicLabel=" + encodeURI(labels[i]["label"]) + " >" + labels[i]["label"] + "</a>";
         utxo.innerHTML = labels[i]["amt"].toFixed(8)
       }
       if (extend=true)
@@ -62,6 +62,102 @@ function populateLabels(extend=false)
   };
   // gets the data applying the specified search criteria
   req.open("GET", "/api/?function=getPublicLabelAggregates&chainID=" + chainID + "&startPos=" + startPos + "&endPos=" + endPos + "&startDate=" + startDate + "&endDate=" + endDate + "&searchTerm=" + searchTerm, true);
+  req.send();
+
+}
+
+function populatePublicLabels(extend=false)
+{
+  selectCoinByUrl();
+
+  var searchParams = new URLSearchParams(location.href);
+  var chainID = searchParams.get("chainID");
+
+  var rowsCountHTML = document.getElementById("rowsCount");
+  var rowsCount = parseInt(rowsCountHTML.value);
+  var searchTerm = document.getElementById("searchBar").value;
+  var startDate = searchParams.get('startDate');
+  var endDate = searchParams.get('endDate');
+
+  var publicLabel = searchParams.get('publicLabel');
+  var publicLabelMessage = document.getElementById("publicLabelMessage");
+  publicLabelMessage.innerHTML = publicLabel;
+
+  var labelTableHTML = document.getElementById("labelTable");
+  var listLength = labelTableHTML.rows.length - 1;
+
+  if (extend == false)
+  {
+    labelTableHTML.innerHTML = "";
+    var startPos = rowsCount;
+    var endPos = 0;
+  }
+  else
+  {
+    var startPos = listLength + rowsCount;
+    var endPos = listLength;
+  }
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function() {
+    if (req.readyState == 4 && req.status == 200)
+    {
+      var APIResponseJSON = req.responseText;
+      var labels = JSON.parse(APIResponseJSON);
+
+      if (extend == false){
+        var header = labelTableHTML.createTHead();
+        var headerRow = header.insertRow(0);
+        var txDateHeader = headerRow.insertCell(0);
+        var txIDHeader = headerRow.insertCell(1);
+        var utxoHeader = headerRow.insertCell(2);
+        txDateHeader.innerHTML = "<b>Tx Date</b>";
+        txIDHeader.innerHTML = "<b>Tx ID</b>";
+        if (chainID == 2 || chainID == 4){
+            utxoHeader.innerHTML = "<b>Total Output (BCH)</b>";
+        }
+        else
+        {
+            utxoHeader.innerHTML = "<b>Total Output (BTC)</b>";
+        }
+        var spentHeader = headerRow.insertCell(3);
+
+        spentHeader.innerHTML = "<b>Spent?</b>";
+
+      }
+      var body = labelTableHTML.createTBody();
+      for (var i = 0; i < labels.length; i++)
+      {
+        var bodyRow = body.insertRow(i);
+        var txDate = bodyRow.insertCell(0);
+        var txID = bodyRow.insertCell(1);
+        var utxo = bodyRow.insertCell(2);
+        var spent = bodyRow.insertCell(3);
+        var spentDate = bodyRow.insertCell(4);
+
+        var date = new Date(labels[i]["unixTimeCreated"]*1000);
+        txDate.innerHTML = date.toDateString();
+        txID.innerHTML = labels[i]["txid"];
+        utxo.innerHTML = labels[i]["amt"].toFixed(8);
+
+        if (labels[i]["unixTimeSpent"] == 0)
+        {
+            spent.innerHTML = "No";
+        }
+        else
+        {
+            var dateSpent = new Date(labels[i]["unixTimeSpent"]*1000);
+            spent.innerHTML = "Yes " + dateSpent.toDateString();
+        }
+
+      }
+      if (extend==true)
+      {
+        window.scrollTo(0,document.body.scrollHeight);
+      }
+    }
+  };
+  // gets the data applying the specified search criteria
+  req.open("GET", "/api/?function=getPublicLabelOutputs&chainID=" + chainID + "&startDate=" + startDate + "&endDate=" + endDate + "&publicLabel=" + encodeURI(publicLabel) + "&searchTerm=" + encodeURI(searchTerm), true);
   req.send();
 
 }
@@ -136,9 +232,41 @@ function setupPage()
   mobileAdjust();
 }
 
+function setupPagePublicLabels()
+{
+
+  window.setInterval(populatePublicLabels, 10*1000*60);
+
+  clearScreen();
+  getUiDefaults(init=true);
+  populatePublicLabels();
+  mobileAdjust();
+
+}
+
+function selectCoinByUrl()
+{
+  searchParams = new URLSearchParams(location.href);
+  var chainIDobj = document.getElementById("chainID");
+  var chainID = searchParams.get("chainID");
+
+  if (chainID > 0)
+  {
+      chainIDobj.value = chainID;
+
+      var coin = "";
+      if (chainID == 1) coin = 'btc';
+      if (chainID == 2) coin = 'bch';
+      if (chainID == 3) coin = 'btc_test';
+
+      if (coin != "") selectCoin(coin, false);
+  }
+}
 
 function selectCoin(coin, event=false)
 {
+  var pageHTML = document.getElementById("pageName").name;
+  var chainID = document.getElementById("chainID");
   var activateHTML = document.getElementById(coin);
 
   if (coin == "bch")
@@ -151,6 +279,7 @@ function selectCoin(coin, event=false)
   else if (coin == "btc")
   {
     chainID.value = 1;
+    //debugger;
     var deactivate1HTML = document.getElementById("bch");
     var deactivate2HTML = document.getElementById("btc_test");
     var deactivate3HTML = document.getElementById("bch_test");
@@ -158,7 +287,7 @@ function selectCoin(coin, event=false)
   else if (coin == "btc_test")
   {
     chainID.value = 3;
-
+    //debugger;
     var deactivate1HTML = document.getElementById("btc");
     var deactivate2HTML = document.getElementById("bch");
     var deactivate3HTML = document.getElementById("bch_test");
@@ -166,10 +295,11 @@ function selectCoin(coin, event=false)
 
 
   // activate selected section
-  if (!activateHTML.className.includes("active"))
-  {
-    activateHTML.className += " active";
-  }
+  if (activateHTML)
+      if (!activateHTML.className.includes("active"))
+      {
+        activateHTML.className += " active";
+      }
 
   try {
   // deactive other sections
@@ -180,7 +310,15 @@ function selectCoin(coin, event=false)
 
 
   if (event){
-  populateLabels();}
+      if (pageHTML == "index")
+          populateLabels();
+
+      if (pageHTML == "publiclabel")
+      {
+          location.href = "/index.html&chainID=" + chainID.value;
+      }
+  }
+
 }
 
 
@@ -199,6 +337,7 @@ function getUiDefaults(init=false)
   var rowsCountHTML = document.getElementById("rowsCount");
   var timePeriodHTML = document.getElementById("timePeriod");
   selectCoin(coin);
+  selectCoinByUrl();
   sunChange(init=init, orbitState);
   rowsCountHTML.value = rowsCount;
   rowsCountHTML.default = rowsCount;
