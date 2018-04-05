@@ -10,11 +10,18 @@ echo "Connecting to Bitcoin testnet ..."
 $HOME/bitcoinUnlimited/bin/bitcoin-cli -datadir=$HOME/.bitcoinTestnet getinfo
 echo ""
 
-echo "Getting process for blockchainScanner.py ..."
-ps -ef | grep blockchainScanner.py
+echo "Getting process for web server apiRouter.py ..."
+pgrep -af apiRouter.py
 echo ""
 
-echo "Getting process for web server apiRouter.py ..."
-ps -ef | grep apiRouter.py
+echo "Recent output of apiRouter.py log ..."
+tail start-apiRouter.log -n10
+echo ""
 
+echo "Getting process for blockchainScanner.py ..."
+pgrep -af blockchainScanner.py
+echo ""
 
+echo "Recent output of blockchainScanner.py log ..."
+tail start-scan.log -n10
+echo ""

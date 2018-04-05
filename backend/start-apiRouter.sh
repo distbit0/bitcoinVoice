@@ -2,5 +2,4 @@
 
 # start bitcoinVoice apiRouter
 cd /home/bitcoinvoice/projects/bitcoinVoice/backend
-#python3 -m tornado.autoreload ./apiRouter.py /home/bitcoinvoice/projects/bitcoinVoice &
-python3 ./apiRouter.py /home/bitcoinvoice/projects/bitcoinVoice &
+python3 -u ./apiRouter.py /home/bitcoinvoice/projects/bitcoinVoice > start-apiRouter.log &

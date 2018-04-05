@@ -10,7 +10,6 @@ sudo apt install postgres-9.4 pgadmin3
 
 
 ## CONFIGURATION OF bitcoin.conf files required 
-
 ##
 ## bitcoin.conf configuration file. Lines beginning with # are comments.
 ##
@@ -28,5 +27,11 @@ rpcport=8331
 server=1
 rpcauth=bitcoinvoice:46e4a4517db427c09cc6e720733a6e20$aa515cd7759d0599ac1bac2edb86cabfacd5d9401796435bf81c2aad72420ff1
 
+# Server auto startup 
+# need sleep 60 to give some time for postgres server to start
+# sudo crontab -e 
+@reboot sleep 60 && <installpath>/bitcoinVoice/backend/start-apiRouter.sh
 
+# crontab -e
+@reboot  sleep 60 && <installpath>/bitcoinVoice/backend/startAll.sh > <installpath>/bitcoinVoice/backend/startAll.log
 
