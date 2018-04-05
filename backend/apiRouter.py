@@ -98,6 +98,7 @@ application = tornado.web.Application([
   (r"/js.js", JSHandler),
   (r"/css.css", CSSHandler),
   (r"/tableSort.js", tableSortHandler),
+  (r'/bitcoin-cash-send-public-label.png()', tornado.web.StaticFileHandler, {'path': frontendPath + '/bitcoin-cash-send-public-label.png'}),
   (r'/webfavicon.ico()', tornado.web.StaticFileHandler, {'path': frontendPath + '/favicon.ico'}),
   (r'/magnifyingGlass.png()', tornado.web.StaticFileHandler, {'path': frontendPath + '/magnifyingGlass.png'}),
   (r"/shareTech.ttf()", tornado.web.StaticFileHandler, {'path': frontendPath + '/shareTech.ttf'}),
