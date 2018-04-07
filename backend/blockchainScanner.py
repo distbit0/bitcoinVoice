@@ -88,7 +88,7 @@ def updateSpentPLRows(chainID):
         if not isUnspentOut:
             print("########## Updating spent public label ..." + str(tx["txID"]) + " " + str(tx["txOutputSequence"]))
             # since gettxout only returns unspent data its hard to know the block when the public label was spent at this time
-            setSpentTime(chainID, tx["txID"], tx["txOutputSequence"], time.time(), null, null)
+            setSpentTime(chainID, tx["txID"], tx["txOutputSequence"], time.time(), None, None)
         #else :
         #    print("UnSpent.")
 
