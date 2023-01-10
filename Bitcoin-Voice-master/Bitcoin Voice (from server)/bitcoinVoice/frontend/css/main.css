@@ -1,0 +1,194 @@
+html *
+{
+   font-family: 'shareTech', sans-serif;
+   -webkit-text-size-adjust: none;
+}
+
+#mainPage{
+    width: 60%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+body {
+    text-align: center;
+    background-color: black;
+}
+
+@font-face {
+font-family: "hairline";
+src: url("/fonts/hairline.ttf");
+}
+
+@font-face {
+font-family: "shareTech";
+src: url("/fonts/shareTech.ttf");
+}
+
+#title {
+  font-family: 'hairline', sans-serif;
+  font-size:75px;
+  color: #4B87CF;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.button {
+  width: 120px;
+  height: 36px;
+  font-size: 20px;
+  border: 2px solid #4BCF93;
+  background-color: inherit;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px;
+  display: inline-block;
+  margin: auto;
+  color: #4BCF93;
+}
+
+.button:hover {
+    background-color: #4BCF93;
+    color: white;
+}
+
+.smallField {
+  width: 90px;
+  height: 36px;
+  float: left;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 20px;
+  display: inline-block;
+  color: #4BCF93;
+  margin: auto;
+  background-color: inherit;
+  border: 1px solid #4BCF93;
+ }
+
+.inputLabel {
+  height: 36px;
+  float: left;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 30px;
+  display: inline-block;
+  color: #4BCF93;
+  margin: auto;
+}
+
+a {
+    color: unset;
+}
+
+th, td {
+    padding: 15px;
+}
+
+#labelTable tr:nth-child(even){
+     background-color: #071F22;
+}
+
+#labelTable {
+    text-align: left;
+    width: 100%;
+    color: #4BCF93;
+    border-radius:100px;
+    font-size: 20px;
+}
+
+#searchBar{
+  height: 45px;
+  width:90%;
+  border-radius: 6px;
+  border: 1px solid #4BCF93;
+  font-size: 30px;
+  background: url(/images/magnifyingGlass.png) no-repeat scroll 7px 7px;
+  padding-left:60px;
+  color: #4BCF93;
+  margin: auto;
+}
+
+.coin {
+    border: none;
+    color: white;
+    padding: 23px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 40px;
+    cursor: pointer;
+    margin: 12px;
+    width:20%;
+    border-radius:5px;
+    font-family: 'hairline', sans-serif;
+}
+
+#bch.active, #bch:hover {
+    background-color: #4BCF51;
+    color: white;
+}
+
+#btc.active, #btc:hover {
+    background-color: #FF9900;
+    color: white;
+}
+
+#btc_test.active, #btc_test:hover {
+    background-color: #FF9900;
+    color: white;
+}
+
+#btc {
+    border: 2px solid #FF9900;
+    color: #FF9900;
+}
+
+#bch {
+    border: 2px solid #4BCF51;
+    color: #4BCF51;
+}
+
+#btc_test {
+    border: 2px solid #FF9900;
+    color: #FF9900;
+}
+
+thead {
+  border: 2px solid #4BCF93;
+  font-size: 21px;
+  padding: 2px;
+  color: #4BCF93;
+}
+
+.paragraph {
+    color: #4BCF93;
+    font-size: 20px;
+    text-align: left;
+    margin: auto;
+}
+
+ul.share-buttons, .twitterImage{
+  list-style: none;
+  padding: 0;
+  width:50px;
+  height:50px;
+  float: right
+}
+
+ul.share-buttons li{
+  display: inline;
+}
+
+ul.share-buttons .sr-only{
+  position: absolute;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}

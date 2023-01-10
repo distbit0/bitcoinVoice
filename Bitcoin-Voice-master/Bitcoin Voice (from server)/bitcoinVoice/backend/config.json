@@ -1,0 +1,17 @@
+{
+    "uiDefaults": {
+        "rowsCount": 40,
+        "coin": "bch",
+        "timePeriod": "Week",
+            "timePeriods": {
+            "1 hour": 0.04166,
+            "4 hours": 0.16666,
+            "Day": 1,
+            "Week": 7,
+            "Month": 30,
+            "Year": 365,
+            "All time": 4000000
+        },
+        "onlyUnspent": 0
+    }
+}

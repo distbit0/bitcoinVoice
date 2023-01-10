@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108131951-1"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-108131951-1');</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="/js/navbar.js"></script>
+    <script src="/js/mobileAdjust.js"></script>
+    <link   href="/css/main.css" type="text/css" rel="stylesheet"/>
+    <link   href="/css/navbar.css" type="text/css" rel="stylesheet"/>
+    <link   href="/images/favicon.ico" type="image/x-icon" rel="icon"/>
+    <style>
+    .question {
+        color: #4B87CF;
+        font-size:40px;
+    }
+    .topic {
+        font-size:50px;
+    }
+    .summaryTopic{
+        font-size:33px;
+        font-weight:bold;
+    }
+    </style>
+    <title>Bitcoin Voice</title>
+        <meta name="Description" content="Bitcoin Voice is designed to promote and allow for a more censorship resistant process of decision making to occur within the Bitcoin community.">
+    <meta name="Keywords" content="bitcoin cash voice bitcoinvoice bitcoincash crypto currency cryptocurrency voting vote democracy blockchain democratic trustless verifiable community opensource github open source">
+</head>
+
+<body id="body" onload="createNavBar(); mobileAdjust();">
+  <div id="mainPage">
+      <div id="navbarDiv"></div>
+      <h1 id="title">Bitcoin Voice FAQ</h1>
+      <p class="paragraph" style="font-size: 25px !important; float: unset;">
+            <a href="#overview"><span class="summaryTopic">Overview:</span>
+            <br>What is Bitcoin Voice?
+            <br>What can Bitcoin Voice be used for, why is it useful?
+            </a><br><br><a href="#howToVote"><span class="summaryTopic">How to vote:</span>
+            <br>How can I vote using Bitcoin Voice?
+            <br>What wallets support voting?
+            <br>How can I vote using Bitcoin Unlimited Cash?
+            <br>How do I start a vote campaign?
+            </a><br><br><a href="#website"><span class="summaryTopic">Website:</span>
+            <br>Why do most issues on BitcoinVoice.IO seem irrelevant?
+            <br>What does the "Total Unspent Output" column represent?
+            <br>What does the "time period" menu mean?
+            </a><br><br><a href="#details"><span class="summaryTopic">Details:</span>
+            <br>What makes Bitcoin Voice censorship resistant?
+            <br>How does Bitcoin Voice prevent spam and bots from voting?
+            <br>Is Bitcoin Voice open source?
+            <br>How do I add voting functionality to my wallet?
+            </a><br><br><a href="#contact"><span class="summaryTopic">Contact:</span>
+            <br>PM me on Twitter:
+            </a>
+      </p>
+      <br><br><br><br>
+      <p class="paragraph" style="font-size: 30px !important; float: unset;">
+
+        <span class="topic" id="overview">Overview:</span>
+        <br><br><span class="question">What is Bitcoin Voice?</span>
+        <br>Bitcoin Voice is a voting platform for Bitcoin that allows coin-holders to vote on any issues without censorship.
+        <br>This is achieved via the two primary aspects of Bitcoin Voice:
+        <br>1) <a target="_blank" href="/">BitcoinVoice.io</a>, the website that allows anyone to easily see the current community consensus on any issue and to see what issues are currently trending/popular.
+        <br>2) The Bitcoin Voice protocol (described in the <a target="_blank" href="/protocol.html">Protocol</a> page) that specifies the format for creating transactions for voting using Bitcoin Voice.
+
+        <br><br><span class="question">What can Bitcoin Voice be used for, why is it useful?</span>
+        <br>Bitcoin Voice allows for the Bitcoin community to more easily determine the community consensus on an issue. For example, the block size limit debate could have been more easily settled using Bitcoin Voice.
+        <br>There are always going to be contentious issues within Bitcoin and unless there are mechanisms that allow the Bitcoin community and its stakeholders to easily come to a consensus on these issues, often stagnation in adoption and development will occur as seen in Bitcoin Core prior to the fork.
+        <br>In addition to speeding up the development and consensus process, Bitcoin Voice will make it significantly more difficult for censorship and confusion tactics to have any effect on the outcome as it allows people to instantly see what the consensus among coin-holders is.
+
+
+        <br><br><br><span class="topic" id="howToVote">How to vote:</span>
+        <br><br><span class="question">How can I vote using Bitcoin Voice?</span>
+        <br>Voting in Bitcoin Voice is achieved by sending yourself a transaction containing the name of the issue that you want to vote on and the amount of coins that you would like to vote on that issue. Your vote will be valid until you spend the amount elsewhere. Currently you can vote using <a target="_blank" href="https://www.bitcoinunlimited.info/download">Bitcoin Unlimited Cash</a> although soon voting support is going to be also added to <a target="_blank" href="https://electroncash.org/">Electron Cash</a>.
+
+        <br><br><span class="question">What wallets support voting?</span>
+        <br>Currently the only wallet that supports voting is <a target="_blank" href="https://www.bitcoinunlimited.info/download">Bitcoin Unlimited Cash</a>. Since Bitcoin Unlimited Cash is a full node and not very easy to use or install, we are actively working on an addition to <a target="_blank" href="https://electroncash.org/">Electron Cash</a> which will make voting a lot easier (because it is a lite wallet and easier to use than a full node wallet.) Voting support will be added to other wallets soon as well.
+        <br>If you are a wallet developer, we would love to work with you to implement voting into your wallet. Contact us at <a target="_blank" href="https://twitter.com/BitcoinVoice">@BitcoinVoice on Twitter</a>.
+
+        <br><br><span class="question">How can I vote using the Bitcoin Unlimited Cash wallet?</span>
+        <br>To vote using <a target="_blank" href="https://www.bitcoinunlimited.info/download">Bitcoin Unlimited Cash</a>, create a transaction that sends to yourself the amount of coins that you want to vote with and type the name of the issue that you want to vote on into the "Public Label" field in send page as seen below:
+        <br><img src="/images/bitcoin-cash-send-public-label.png"/>
+
+        <br><br><span class="question">How do I start a vote campaign?</span>
+        <br>You can create a vote campaign using Bitcoin Voice by firstly creating a vote transaction using <a target="_blank" href="https://www.bitcoinunlimited.info/download">Bitcoin Unlimited Cash</a> (soon also Electron Cash) with the name of the issue that you would like to vote on in it as a label and then by asking other people to also create vote txs using the same label.
+
+        <br><br><br><span class="topic" id="website">Website:</span>
+        <br><br><span class="question">Why do most issues on <a target="_blank" href="/">BitcoinVoice.IO</a> seem irrelevant?</span>
+        <br>Some posts from on-chain social media platforms such as <a target="_blank" href="https://www.blockpress.com">Blockpress</a> and <a target="_blank" href="https://memo.cash">Memo</a> show up because they use a similar protocol to what Bitcoin Voice uses. Although these make up the majority of topics on <a target="_blank" href="/">BitcoinVoice.IO</a> now, once voting functionality has been added into <a target="_blank" href="https://electroncash.org/">Electron Cash</a>, social media posts will be displaced by voting on actual issues since actual issues will have more Bitcoin voted on them.     	
+
+        <br><br><span class="question">What does the "Total Unspent Output" column represent?</span>
+        <br>The "Total Unspent Output" column represents the total value of all (unspent) coins that have been voted on a particular issue.
+
+        <br><br><span class="question">What does the "time period" menu mean?</span>
+        <br>Changing what time period is selected filters votes by maximum age.
+        <br>For instance, if you set it to "Week", it will only take into account votes that were made in the last week when calculating the total unspent output for each issue.
+
+
+        <br><br><br><span class="topic" id="details">Details:</span>
+        <br><br><span class="question">What makes Bitcoin Voice censorship resistant?</span>
+        <br>Bitcoin Voice is censorship resistant because, unlike websites like Reddit and other centralised platforms, all votes are stored on the blockchain and so can't be altered, deleted or censored. Anyone can run their own copy of the <a target="_blank" href="/">BitcoinVoice.IO</a> website as well since it is open source so they can verify the votes themselves.
+
+        <br><br><span class="question">How does Bitcoin Voice prevent spam and bots from voting?</span>
+        <br>Since all votes on Bitcoin Voice are weighted by the amount of coins they contain, making lots of votes won't affect the outcome since, unless they contain a large amount of coins, their total weight will be small. In addition, there is a large incentive not to vote against what is beneficial for Bitcoin as that would potentially result in the value of your coins decreasing.
+
+        <br><br><span class="question">Is Bitcoin Voice open source?</span>
+        <br>Yes, it is completely open source. The GitHub repository is: <a target="_blank" href="https://github.com/picrypto/bitcoinVoice">https://github.com/picrypto/bitcoinVoice</a>
+
+        <br><br><span class="question">How do I add voting functionality to my wallet?</span>
+        <br>If you are a wallet developer, we would love to work with you to implement voting into your wallet. Contact us at <a target="_blank" href="https://twitter.com/BitcoinVoice">@BitcoinVoice on Twitter</a> and see the <a href="/protocol.html">Protocol</a> page for information regarding the format of vote transactions. The changes required to add voting support are very minimal, primarially it involves adding the ability for users to add second output containing an OP_RETURN with the name of the issue that they want to vote on in it to their transactions.
+
+        <br><br><br><span class="topic" id="contact">Contact:</span>
+        <br><br><span class="question">PM me on Twitter:</span>
+        <br><a target="_blank" href="https://twitter.com/BitcoinVoice/">@BitcoinVoice</a>
+</p>
+</div>
+</body>

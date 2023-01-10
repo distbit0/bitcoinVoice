@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108131951-1"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-108131951-1');</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="/js/navbar.js"></script>
+    <script src="/js/mobileAdjust.js"></script>
+    <link   href="/css/main.css" type="text/css" rel="stylesheet"/>
+    <link   href="/css/navbar.css" type="text/css" rel="stylesheet"/>
+    <link   href="/images/favicon.ico" type="image/x-icon" rel="icon"/>
+    <style>
+    </style>
+    <title>Bitcoin Voice</title>
+        <meta name="Description" content="Bitcoin Voice is designed to promote and allow for a more censorship resistant process of decision making to occur within the Bitcoin community.">
+    <meta name="Keywords" content="bitcoin cash voice bitcoinvoice bitcoincash crypto currency cryptocurrency voting vote democracy blockchain democratic trustless verifiable community opensource github open source">
+</head>
+
+<body id="body" onload="createNavBar(); mobileAdjust();">
+  <div id="mainPage">
+      <div id="navbarDiv"></div>
+      <h1 id="title">Bitcoin Voice Protocol</h1>
+      <p class="paragraph" style="font-size: 25px !important; float: unset;">
+      The BitcoinVoice.IO API allows you to programatically access a list of issues sorted by their staked amount (the amount of coins voted on them). It also provides access to information regarding what transactions contained votes for a particular issue. This is facilitated by the following two API endpoints:
+
+<br><br><em><b>getPublicLabelAggregates</b></em>
+<br>Description: The getPublicLabelAggregates API endpoint returns a list of the top issues sorted by their staked amounts. The response is paginated with configurable page sizes.
+<br>Method: GET
+<br>Example request: <a target="_blank" href="https://bitcoinvoice.io/api/?function=getPublicLabelAggregates&chainID=2&startPos=0&endPos=40&startDate=-344071039139.385&endDate=1528997169.632&searchTerm=big%20blocks">https://bitcoinvoice.io/api/?function=getPublicLabelAggregates&chainID=2&startPos=0&endPos=40<br>&startDate=-344071039139.385&endDate=1528997169.632&searchTerm=big%20blocks</a>
+<br>Arguments:
+<br><img style="width:80%" src="/images/getPublicLabelAggregatesArguments.png" />
+<br>Response:
+<br>The response from this this API endpoint is a list of issue names that match the search criteria and their corresponding ranking in the returned list and their staked amount. The “amt” field in the response corresponds to the total amount of coins that are still unspent and that have been voted on that issue, it can be 0 and all this means is that all votes for this issue have been spent and so add up to 0.
+<br>
+<br>Example response:
+<br>[{"rank": 1, "label": "Tasty Big Blocks", "amt": 19.2}]
+<br>
+<br>
+<br><em><b>getPublicLabelOutputs</b></em>
+<br>Description: The getPublicLabelAggregates API endpoint returns a list of transactions sorted by their staked amounts that fit the Bitcoin Voice vote transaction specification and also contain an issue name that matches exactly to the one specified in the request to this end-point.
+<br>Example request: <a target="_blank" href="https://bitcoinvoice.io/api/?function=getPublicLabelOutputs&chainID=2&startPos=0&endPos=40&startDate=-344071038858.775&endDate=1528997433.228&publicLabel=My%20Trezor&onlyUnspent=0">https://bitcoinvoice.io/api/?function=getPublicLabelOutputs&chainID=2&startPos=0&endPos=40<br>&startDate=-344071038858.775&endDate=1528997433.228&publicLabel=My%20Trezor&onlyUnspent=0</a>
+<br>Arguments:
+<br><img style="width:80%" src="/images/getPublicLabelOutputsArguments.png" />
+<br>Response:
+<br>The response from this this API endpoint is a list of vote transactions, sorted by their staked amount, that match the search criteria. Each transaction record in the response contains the following fields:
+<br><img style="width:80%" src="/images/getPublicLabelOutputsResponse.png" />
+<br>
+<br>Example response:
+<br>[{"plBlockHeightSpent": null, "amt": 54.09497261, "unixTimeCreated": 1520766723, "unixTimeSpent": 0, "txIDSpent": null, "txOutputSequence": 1, "publicLabel": "My Trezor", "txid": "02197267f0e5409cf6651ec7fb373a5790b123960d26505ec0dd843bdf8db3b0", "plblockHeightCreated": 520930}, {"plBlockHeightSpent": null, "amt": 1.0, "unixTimeCreated": 1520762690, "unixTimeSpent": 0, "txIDSpent": null, "txOutputSequence": 1, "publicLabel": "My Trezor", "txid": "99fd800ebafea51b376b0b6480a895217d56c2334ab65f0331ed4d9aee62c3d5", "plblockHeightCreated": 520925}]
+</p>

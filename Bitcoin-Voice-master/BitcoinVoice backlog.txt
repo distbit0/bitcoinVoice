@@ -1,0 +1,15 @@
+﻿BitcoinVoice backlog
+
+
+* - tx list - ui
+* - ‎tx list api
+* - ‎qa - test cases
+* - ‎qa - execute
+* - ‎commentary
+* - ‎technical description
+* - ‎api doco
+* - ‎synch blockchains x4 - testnets + mainnets
+* - ‎auto refresh (UI)
+* - clean up code
+* - ‎add sort functionality to UI
+* - ‎ui sort

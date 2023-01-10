@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108131951-1"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-108131951-1');</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/navbar.js"></script>
+    <link   href="/css/main.css" type="text/css" rel="stylesheet"/>
+    <link   href="/css/navbar.css" type="text/css" rel="stylesheet"/>
+    <link   href="/images/favicon.ico" type="image/x-icon" rel="icon"/>
+    <title>Bitcoin Voice</title>
+    <meta name="Description" content="Bitcoin Voice is designed to promote and allow for a more censorship resistant process of community consensus to occur within Bitcoin.">
+    <meta name="Keywords" content="bitcoin cash voice bitcoinvoice bitcoincash crypto currency cryptocurrency voting vote democracy blockchain democratic trustless verifiable community opensource github open source">
+</head>
+
+<body id="body" onload="setupPage();createNavBar();">
+  <div id="mainPage">
+    <ul class="share-buttons">
+        <li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fbitcoinvoice.io&text=Check%20out%20how%20BitcoinVoice.IO%20is%20creating%20a%20more%20censorship%20resistant%20consensus%20process%20in%20Bitcoin%20through%20on-chain%20censorship%20resistant%20voting.%20%40distributedbit%20%40BitcoinVoice" target="_blank" title="Tweet"><img class="twitterImage" alt="Tweet" src="https://cdn1.iconfinder.com/data/icons/iconza-circle-social/64/697029-twitter-512.png"/></a></li>
+    </ul>
+    <div id="navbarDiv"></div>
+    <h1 id="title">Bitcoin Voice</h1>
+    <p class="paragraph" style="font-size: 25px; float: unset; text-align: center;">Bitcoin Voice is a voting platform for Bitcoin that allows coin-holders to vote on contentious issues without censorship.</p>
+    <br><br>
+    <p class="paragraph" style="float: unset; text-align: center">
+    All data is verifiably sourced live from blockchain transactions.
+    <br>By adding the same public label to their transactions, users aggregate their transaction amounts in the ranking.
+    <br>Bitcoin Voice can be used as a verifiable voting platform for coin-holders to vote on issues without censorship.
+    <br></p>
+    <input type="hidden" id="chainID">
+    <input type="hidden" id="publicLabel">
+    <table style="width: 100%;">
+      <tr>
+        <td id="bch" class="coin" onclick="selectCoin('bch', event=true)">Bitcoin Cash</td>
+        <td id="btc" class="coin" onclick="selectCoin('btc', event=true)">Bitcoin</td>
+        <td id="btc_test" class="coin" onclick="selectCoin('btc_test', event=true)">Bitcoin Testnet</td>
+      </tr>
+    </table>
+    <br>
+    <p class="paragraph" style="float: unset; text-align: center">To increase the ranking of a public label, send yourself a transaction containing the exact public label and the amount of coins that you would like to vote on the public label.
+    Your vote will be valid as long as the value outpout in it remains unspent.</p>
+    <table style="width: 100%;">
+      <tr>
+        <td><label class="inputLabel">Time Period:&nbsp;</label><select class="smallField" id="timePeriod" onchange="populateLabels()"></td>
+        <td><label class="inputLabel">Rows:&nbsp;</label><input class="smallField" onchange="populateLabels()" id="rowsCount" type="number"></td>
+        <td><input type="button" class="button" style="width:120px; float:left;" value="Reset" onclick="setupPage()"></td>
+      </tr>
+    </table>
+    <input type="text" id="searchBar" onchange="populateLabels();">
+    <br><br>
+    <table style="width: 100%;" id="labelTable"></table><br>
+    <button onclick="populateLabels(extend=true)" class="button" style="width:200px;">Show more results</button>
+  </div>
+</body>

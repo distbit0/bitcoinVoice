@@ -1,0 +1,13 @@
+backend/apiRouter.py
+backend/blockchainInterface.py
+backend/blockchainScanner.py
+backend/config.json
+backend/plDatabaseInterface.py
+backend/start-apiRouter.sh
+backend/start-bitcoind.sh
+backend/start-scan.sh
+docs/installation-notes.md
+frontend/css.css
+frontend/index.html
+frontend/js.js
+README.md

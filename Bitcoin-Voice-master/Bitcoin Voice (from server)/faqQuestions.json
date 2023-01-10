@@ -1,0 +1,50 @@
+{
+  "inflation": [
+    "What is the total emission of BitGrin?",
+    "The total emission of BitGrin is 21 million BitGrin. BitGrin's emission schedule is the same as Bitcoin's therefore allowing it to be a long term store of value unlike if it had an inflationary emission schedule such as that of Grin. In BitGrin, just as in Bitcoin, 50 new coins are mined every ten minutes, halving every four years."
+  ],
+  "reward": [
+    "What is the founders reward of BitGrin?",
+    "BitGrin has a very small founders reward to fund development and improvement of the BitGrin protocol and ecosystem. The founders reward is 0.5 BitGrin per block, sent to the developers from every block reward, until the first halvening which occurs in four years, equating to only 4.9% of the total supply. The implementation of this founders reward is vital to ensuring that the protocol and network are actively maintained and improved, as we have seen the negative consequences of the lack of a founders reward for new PoW coins where a good case study is Grin and their funding problems."
+  ],
+  "mining": [
+    "How can I mine BitGrin?",
+    "You can mine BitGrin on Windows or Linux, ask our community for help with doing this and see the following two guides for Windows and Linux:\nWindows: https://bitgrin.dev/windows-server-mining-guide/\nLinux: https://bitgrin.dev/linuxmining/"
+  ],
+  "deflation": [
+    "Is BitGrin deflationary?",
+    "BitGrin's emission schedule results in it being deflationary for most of its existence. BitGrin's annual inflation rate decreases exponentially over time, in addition to halving every four years. This makes it a very good contender for going a global money and a good store of value, unlike fiat currencies."
+  ],
+  "pools": [
+    "What mining pools support BitGrin?",
+    "Currently there is one mining pool that supports BitGrin although there will soon be more. You can either solo mine or use the official BitGrin mining pool at https://pool.bitgrin.dev"
+  ],
+  "asic": [
+    "ASIC resistance of BitGrin",
+    "BitGrin's mining algorithms c29 and c31 do not have any ASICs developed for them, although there is one in development."
+  ],
+  "mw": [
+    "What is MimbleWimble?",
+    "MimbleWimble is the blockchain protocol that BitGrin is based on. The MimbleWimble protocol allows people to send completely private transactions where both the sender, receiver and amount are hidden, unlike in traditional cryptocurrencies where all transactions are completely public and visible to anyone. This makes BitGrin transactions very private and allows BitGrin to be usable as money because your transactions in it can't be spied on like they can in other cryptocurrencies.\n\nMimblewimble also offers greatly increased scalability, as it allows for transactions that are no longer needed, to be trustlessly pruned from the blockchain. This results in the cost of running a full node being significantly lower than on Bitcoin which both makes BitGrin more decentralized and more secure, because full nodes offer you maximum privacy and security. An introductory explanation of MimbleWimble can be found here: https://cryptopotato.com/what-is-mimblewimble-the-complete-beginners-guide/"
+  ],
+  "grin": [
+    "Difference between Grin and BitGrin?",
+    "Grin was one of the first two implementations of the MimbleWimble blockchain protocol. It has greatly increased privacy and scalability compared to Bitcoin, as a result of the inherent benefits of the MimbleWimble protocol. Grin, however has a highly inflationary emission schedule, meaning that overtime, your Grin will dramatically decrease in value as they are diluted by new coins being minted at a constant rate every day. The inflationary nature of Grin makes it a bad candidate for being a globally adopted money since one of the requirements of money is that it is able to be a store of value in addition to a means of exchange, among others.\n\nBitGrin is a fork of Grin that has a more deflationary emission schedule, the same emission schedule as what Bitcoin has. As a result, BitGrin has all the privacy and scalability benefits of Grin, and it also has a sound emission schedule which makes it a sound money in terms pf privacy and in terms of monetary policy which is not found in other coins.\n\nIn addition to having a more sound inflation schedule than Grin, BitGrin also has an easy to use open source GUI wallet available here: https://bitgrin.dev/Download/."
+  ],
+  "blocktime": [
+    "What is the block time of BitGrin?",
+    "The block time of BitGrin is 60 seconds."
+  ],
+  "wallets": [
+    "What wallets are available?",
+    "Currently you can store your BitGrin on the official open source GUI wallet, Kingfish, which you can download here: https://bitgrin.dev/Download/ or on the command line wallet which can also be downloaded from: https://bitgrin.dev/Download/"
+  ],
+  "exchanges": [
+    "What exchanges support BitGrin?",
+    "BitGrin is currently supported by Vinex.network, in addition to a discord OTC market here: https://discord.gg/bJwKDrN and more exchanges are coming soon!"
+  ],
+  "discord": [
+    "Is there a BitGrin Discord server?",
+    "Yes, the BitGrin discord server is: https://discord.gg/e4VdSp6"
+  ]
+}
